@@ -1,9 +1,14 @@
 // const [url] = process.argv.slice(2);
 
 const url = 'https://github.com/42YerevanProjects/push_swap.git';
-import nodegit from 'nodegit';
+import simpleGit from 'simple-git';
 
-console.log(url);
-nodegit.Clone(url, './push_swap');
+const git = simpleGit();
 
-process.exit(0);
+git.clone(url, 'push_swap', (err) => {
+	if (err) {
+		console.error(err);
+		process.exit(1);
+	}
+	console.log('success');
+});
