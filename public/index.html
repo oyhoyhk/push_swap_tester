@@ -5,13 +5,33 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Test Page</title>
-		<form action="/api/repo" method="POST">
-			<p>https://github.com/42YerevanProjects/push_swap.git</p>
-			<input type="text" value="https://github.com/42YerevanProjects/push_swap.git" name="url" />
-			<input type="submit" value="Submit" />
-		</form>
 	</head>
 	<body>
 		<h1>Test</h1>
+		<form id="form">
+			<p>https://github.com/42YerevanProjects/push_swap.git</p>
+			<input id="url" type="text" value="https://github.com/42YerevanProjects/push_swap.git" name="url" />
+			<input type="submit" value="Submit" />
+		</form>
+		<script>
+			const form = document.getElementById('form');
+			const url = document.getElementById('url');
+			form.addEventListener('submit', e => {
+				e.preventDefault();
+				fetch('api/repo', {
+					method: 'POST',
+					body: JSON.stringify({
+						url: url.value,
+					}),
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				})
+					.then(res => {
+						return res.json();
+					})
+					.then(res => console.log(res));
+			});
+		</script>
 	</body>
 </html>
