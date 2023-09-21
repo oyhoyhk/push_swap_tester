@@ -13,6 +13,11 @@
 			<input id="url" type="text" value="https://github.com/42YerevanProjects/push_swap.git" name="url" />
 			<input type="submit" value="Submit" />
 		</form>
+		<form onsubmit="sendMessage(event)">
+			<input type="text" id="messageText" />
+			<button>send</button>
+		</form>
+		<ul id="messages"></ul>
 		<script>
 			const form = document.getElementById('form');
 			const url = document.getElementById('url');
@@ -32,6 +37,20 @@
 					})
 					.then(res => console.log(res));
 			});
+			const ws = new WebSocket('ws://localhost:8000/ws');
+			ws.onmessage = function (event) {
+				const messages = document.getElementById('messsages');
+				const message = document.createElement('li');
+				const content = document.createTextNode(evnet.data);
+				message.appendChild(content);
+				messages.appendChild(message);
+			};
+			function sendMessage(event) {
+				const input = document.getElementById('messageText');
+				ws.send(input.value);
+				input.value = '';
+				event.preventDefault();
+			}
 		</script>
 	</body>
 </html>

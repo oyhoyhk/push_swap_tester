@@ -1,11 +1,10 @@
 from typing import Annotated
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, WebSocket
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 import sys
 import os
-from git import Repo
 
 app = FastAPI()
 
@@ -17,8 +16,13 @@ async def get_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-class Item(BaseModel):
-    url: str
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        print(data)
+        await websocket.send_text(f"Message text was {data}")
 
 
 @app.post("/api/repo")
