@@ -1,0 +1,57 @@
+[
+  {
+    "name": "sa",
+    "title": "sa - Switch A",
+    "description": "Swap the top element of stack A with the element below it"
+  },
+  {
+    "name": "sb",
+    "title": "sb - Switch B",
+    "description": "Swap the top element of stack B with the element below it"
+  },
+  {
+    "name": "ss",
+    "title": "ss - Switch Both",
+    "description": "Stack A, B. Swap the position of the top element and the bottom element respectively"
+  },
+  {
+    "name": "ra",
+    "title": "ra - Rotate A",
+    "description": "Move the top element of stack A to the bottom of the stack"
+  },
+  {
+    "name": "rb",
+    "title": "rb - Rotate B",
+    "description": "Move the top element of stack B to the bottom of the stack"
+  },
+  {
+    "name": "rr",
+    "title": "rr - Rotate Both",
+    "description": "Moves the topmost element of stacks A and B to the bottom of the stack."
+  },
+  {
+    "name": "rra",
+    "title": "rra - Reverse Rotate A",
+    "description": "Moves the bottom element of stack A to the top of the stack"
+  },
+  {
+    "name": "rrb",
+    "title": "rrb - Reverse Rotate B",
+    "description": "Move the bottom element of stack B to the top of the stack"
+  },
+  {
+    "name": "rrr",
+    "title": "rrr - Reverse Rotate Both",
+    "description": "Moves the bottommost element of stacks A and B to the top of the stack"
+  },
+  {
+    "name": "pa",
+    "title": "pa - Push A",
+    "description": "Moves the top element of stack B to the top of stack A"
+  },
+  {
+    "name": "pb",
+    "title": "pb - Push B",
+    "description": "Moves the top element of stack A to the top of stack B"
+  }
+]

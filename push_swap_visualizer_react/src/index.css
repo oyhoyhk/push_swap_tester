@@ -1,0 +1,13 @@
+:root {
+  margin: 0;
+  padding: 0;
+  background: #343434;
+  color: white;
+  font-family: "Oswald", sans-serif;
+  overflow-x:hidden;
+}
+
+a {
+  text-decoration:none;
+  color:white;
+}

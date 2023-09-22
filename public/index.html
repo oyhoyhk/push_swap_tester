@@ -8,6 +8,10 @@
 	</head>
 	<body>
 		<h1>Test</h1>
+		<form id="nameForm">
+			<input type="text" id="idInput" />
+			<button type="submit">submit</button>
+		</form>
 		<form id="form">
 			<p>https://github.com/42YerevanProjects/push_swap.git</p>
 			<input id="url" type="text" value="https://github.com/42YerevanProjects/push_swap.git" name="url" />
@@ -21,7 +25,7 @@
 		<script>
 			const form = document.getElementById('form');
 			const url = document.getElementById('url');
-			form.addEventListener('submit', e => {
+			form.addEventListener('submit', (e) => {
 				e.preventDefault();
 				fetch('api/repo', {
 					method: 'POST',
@@ -32,10 +36,10 @@
 						'Content-Type': 'application/json',
 					},
 				})
-					.then(res => {
+					.then((res) => {
 						return res.json();
 					})
-					.then(res => console.log(res));
+					.then((res) => console.log(res));
 			});
 			const ws = new WebSocket('ws://localhost:8000/ws');
 			ws.onmessage = function (event) {
