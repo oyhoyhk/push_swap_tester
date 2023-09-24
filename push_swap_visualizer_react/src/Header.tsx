@@ -2,13 +2,21 @@ import styled from '@emotion/styled';
 import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
+	const location = useLocation();
+	console.log(location.pathname);
 	return (
 		<HeaderContainer>
 			<Title>Push Swap Visualizer</Title>
 			<div>
-				<StyledLink to={'/description'}>Introduce</StyledLink>
-				<StyledLink to={'/'}>Visualizer</StyledLink>
-				<StyledLink to={'/tester'}>Tester</StyledLink>
+				<StyledLink className={location.pathname === '/description' ? 'active' : ''} to={'/description'}>
+					Introduce
+				</StyledLink>
+				<StyledLink className={location.pathname === '/' ? 'active' : ''} to={'/'}>
+					Visualizer
+				</StyledLink>
+				<StyledLink className={location.pathname === '/tester' ? 'active' : ''} to={'/tester'}>
+					Tester
+				</StyledLink>
 			</div>
 		</HeaderContainer>
 	);
@@ -18,6 +26,13 @@ const StyledLink = styled(Link)`
 	margin: 5px;
 	padding-bottom: 5px;
 	border-bottom: 1px solid gray;
+	color: gray;
+	transition: 0.3s;
+	&:hover,
+	&.active {
+		color: white;
+		border-bottom: 1px solid white;
+	}
 `;
 
 const HeaderContainer = styled.div`
