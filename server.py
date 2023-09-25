@@ -10,44 +10,57 @@ import os
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:5173"
-]
+
+@app.on_event("startup")
+async def create_repo_directory():
+    repo_dir = "repo"
+
+    if not os.path.exists(repo_dir):
+        try:
+            os.makedirs(repo_dir)
+            print(f"Created '{repo_dir}' directory.")
+        except Exception as e:
+            print(f"Error creating '{repo_dir}' directory")
+
+
+origins = ["http://localhost:5173"]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 templates = Jinja2Templates(directory="public")
+
 
 @app.get("/")
 async def get_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-ws_connections  = {}
+
+ws_connections = {}
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     ws_connections.append(websocket)
-    print('-------------------  ws list')
+    print("-------------------  ws list")
     for connect in ws_connections:
         for key, value in connect.items():
-            print(key, ' : ', value)
+            print(key, " : ", value)
     try:
         while True:
             data = await websocket.receive_text()
-            print('ws connected')
+            print("ws connected")
             print(data)
             await websocket.send_text(f"Message text was {data}")
     except WebSocketDisconnect:
         ws_connections.remove(websocket)
-        print('ws disconnected')
-        
+        print("ws disconnected")
 
 
 @app.post("/api/repo")
@@ -63,11 +76,12 @@ async def request_test(request: Request):
     Repo.clone_from(url, name)
     return {"msg": "good"}
 
+
 @app.post("/api/check_github_id")
 async def check_github_id_in_websocket(request: Request):
     result = await request.json()
     id = result["id"]
-    print('id : ', id)
+    print("id : ", id)
     if id in ws_connections:
         return False
     return True
