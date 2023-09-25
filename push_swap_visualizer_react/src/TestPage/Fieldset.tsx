@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import axios from 'axios';
 import { IStatus } from './TestPage';
+import { useEffect, useRef } from 'react';
 
 const Fieldset = ({
 	status,
@@ -17,8 +18,18 @@ const Fieldset = ({
 	onBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }) => {
+	const containerRef = useRef<HTMLFieldSetElement>(null);
+
+	useEffect(() => {
+		setTimeout(() => {
+			if (containerRef.current) {
+				containerRef.current.classList.add('active');
+				console.log('hi');
+			}
+		}, 500);
+	}, []);
 	return (
-		<Container className={status.check ? 'active' : ''}>
+		<Container ref={containerRef}>
 			<legend>{legend}</legend>
 			<input type="text" placeholder={placeholder} onBlur={onBlur} onKeyUp={onKeyUp} />
 			<Message>{errMsg}</Message>
@@ -45,6 +56,7 @@ const Container = styled.fieldset`
 	align-items: center;
 	flex-direction: column;
 	opacity: 0;
+	transition: 0.5s;
 	transform: translateY(100px);
 	&.active {
 		opacity: 1;

@@ -19,28 +19,48 @@ const TestPage = () => {
 		const response = await axios.post(SERVER_URL + '/api/check_github_id', { id: e.target.value });
 		const check = response.data;
 		console.log(check);
+		if (check == true) {
+			setStatus({ ...status, repo: { ...status.repo, check: true } });
+		}
 	};
 	const onKeyUpGithubID = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
 			e.currentTarget.blur();
 		}
 	};
+
+	const onBlurRepo = (e: React.ChangeEvent<HTMLInputElement>) => {
+		console.log('Blur Repo : ', e.target.value);
+	};
+
+	const onKeyUpRepo = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		console.log('KeyUp Repo');
+		if (e.key === 'Enter') {
+			e.currentTarget.blur();
+		}
+	};
 	return (
 		<Container>
-			<Fieldset
-				status={status['id']}
-				legend="Github ID"
-				placeholder="Input your github ID"
-				errMsg="Available"
-				onBlur={onBlurGithubID}
-				onKeyUp={onKeyUpGithubID}
-			/>
-			<Fieldset
-				status={status['repo']}
-				legend="Github Repository"
-				placeholder="Input your push_swap repository URL for testing"
-				errMsg="Available"
-			/>
+			{status['id'].check && (
+				<Fieldset
+					status={status['id']}
+					legend="Github ID"
+					placeholder="Input your github ID"
+					errMsg="Available"
+					onBlur={onBlurGithubID}
+					onKeyUp={onKeyUpGithubID}
+				/>
+			)}
+			{status['repo'].check && (
+				<Fieldset
+					status={status['repo']}
+					legend="Github Repository"
+					placeholder="Input your push_swap repository URL for testing"
+					errMsg="Available"
+					onBlur={onBlurRepo}
+					onKeyUp={onKeyUpRepo}
+				/>
+			)}
 			<fieldset>
 				<legend>Test Process</legend>
 			</fieldset>
