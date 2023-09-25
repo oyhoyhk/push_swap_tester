@@ -2,11 +2,25 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import { IStatus } from './TestPage';
 
-const Fieldset = ({ status, legend, placeholder, errMsg }: { legend: string; placeholder: string; errMsg: string; status: IStatus }) => {
+const Fieldset = ({
+	status,
+	legend,
+	placeholder,
+	errMsg,
+	onBlur,
+	onKeyUp,
+}: {
+	legend: string;
+	placeholder: string;
+	errMsg: string;
+	status: IStatus;
+	onBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+}) => {
 	return (
 		<Container className={status.check ? 'active' : ''}>
 			<legend>{legend}</legend>
-			<input type="text" placeholder={placeholder} />
+			<input type="text" placeholder={placeholder} onBlur={onBlur} onKeyUp={onKeyUp} />
 			<Message>{errMsg}</Message>
 		</Container>
 	);

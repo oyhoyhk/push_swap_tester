@@ -15,17 +15,26 @@ export interface IStatusContainer {
 
 const TestPage = () => {
 	const [status, setStatus] = useState<IStatusContainer>({ id: { check: true, value: null }, repo: { check: false, value: null } });
-	const onBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-		axios.post(SERVER_URL + '/api/check_github_id', { id: e.target.value }).then(res => console.log(res));
+	const onBlurGithubID = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const response = await axios.post(SERVER_URL + '/api/check_github_id', { id: e.target.value });
+		const check = response.data;
+		console.log(check);
 	};
-	const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+	const onKeyUpGithubID = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
 			e.currentTarget.blur();
 		}
 	};
 	return (
 		<Container>
-			<Fieldset status={status['id']} legend="Github ID" placeholder="Input your github ID" errMsg="Available" />
+			<Fieldset
+				status={status['id']}
+				legend="Github ID"
+				placeholder="Input your github ID"
+				errMsg="Available"
+				onBlur={onBlurGithubID}
+				onKeyUp={onKeyUpGithubID}
+			/>
 			<Fieldset
 				status={status['repo']}
 				legend="Github Repository"
