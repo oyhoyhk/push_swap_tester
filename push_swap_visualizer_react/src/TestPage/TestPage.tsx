@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import { useState } from 'react';
 import Fieldset from './FieldSet';
+import ProcessContainer from './ProcessContainer';
 
 const SERVER_URL = 'http://localhost:8000';
 
@@ -19,6 +20,7 @@ export interface IStatusContainer {
 }
 
 const TestPage = () => {
+	const [processToggle, setProcessToggle] = useState(false);
 	const [status, setStatus] = useState<IStatusContainer>({
 		id: { check: true, value: null, loading: false, responseType: 'success', responseMessage: '' },
 		repo: { check: false, value: null, loading: false, responseType: 'success', responseMessage: '' },
@@ -75,6 +77,7 @@ const TestPage = () => {
 					id: { ...status['id'] },
 					repo: { ...status['repo'], loading: false, responseType: 'success', responseMessage: 'Repository Clone Success' },
 				});
+				setProcessToggle(true);
 			} else {
 				setStatus({
 					id: { ...status['id'] },
@@ -116,9 +119,8 @@ const TestPage = () => {
 					onKeyUp={onKeyUpRepo}
 				/>
 			)}
-			<fieldset>
-				<legend>Test Process</legend>
-			</fieldset>
+			{/* {processToggle && status['id'].value && <ProcessContainer id={status['id'].value} />} */}
+			{<ProcessContainer id={'42YerevanProjects'} />}
 		</Container>
 	);
 };

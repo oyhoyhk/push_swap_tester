@@ -7,6 +7,7 @@ import git
 from pydantic import BaseModel
 import sys
 import os
+import asyncio
 
 app = FastAPI()
 
@@ -114,3 +115,12 @@ async def clone_git_repository(request: Request):
     except Exception as e:
         print(f"An error occurred : {e}")
         return False
+
+
+@app.get("/api/compile_test")
+async def compile_test(id: str):
+    print("id : ", id)
+    await asyncio.sleep(1)
+    return True
+
+@app.get("/")
