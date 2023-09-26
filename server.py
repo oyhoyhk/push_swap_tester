@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from git import Repo
+import git
 from pydantic import BaseModel
 import sys
 import os
@@ -81,7 +81,36 @@ async def request_test(request: Request):
 async def check_github_id_in_websocket(request: Request):
     result = await request.json()
     id = result["id"]
-    print("id : ", id)
-    if id in ws_connections:
+
+    repo_dir = "repo"
+
+    directory_path = os.path.join(repo_dir, id)
+
+    if os.path.exists(directory_path) and os.path.isdir(directory_path):
         return False
-    return True
+    else:
+        return True
+
+
+@app.post("/api/repository")
+async def clone_git_repository(request: Request):
+    result = await request.json()
+    id = result["id"]
+    github_repo = result["repository"]
+
+    print(github_repo, id)
+    target_directory = os.path.join("repo", id)
+
+    try:
+        git.Repo.clone_from(github_repo, target_directory)
+        print("git clone success")
+        return True
+    except git.GitCommandError as e:
+        print(f"Git Command error : {e}")
+        return False
+    except git.InvalidGitRepositoryError as e:
+        print(f"Invalid Git repository : {e}")
+        return False
+    except Exception as e:
+        print(f"An error occurred : {e}")
+        return False

@@ -8,19 +8,51 @@ const SERVER_URL = 'http://localhost:8000';
 export interface IStatus {
 	check: boolean;
 	value: string | null;
+	loading: boolean;
+	responseType: 'success' | 'fail';
+	responseMessage: string;
 }
+
 export interface IStatusContainer {
-	[key: string]: IStatus;
+	id: IStatus;
+	repo: IStatus;
 }
 
 const TestPage = () => {
-	const [status, setStatus] = useState<IStatusContainer>({ id: { check: true, value: null }, repo: { check: false, value: null } });
+	const [status, setStatus] = useState<IStatusContainer>({
+		id: { check: true, value: null, loading: false, responseType: 'success', responseMessage: '' },
+		repo: { check: false, value: null, loading: false, responseType: 'success', responseMessage: '' },
+	});
 	const onBlurGithubID = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		const response = await axios.post(SERVER_URL + '/api/check_github_id', { id: e.target.value });
-		const check = response.data;
-		console.log(check);
-		if (check == true) {
-			setStatus({ ...status, repo: { ...status.repo, check: true } });
+		if (e.target.value === '') return;
+		setStatus({ ...status, id: { ...status['id'], loading: true } });
+		try {
+			const response = await axios.post(SERVER_URL + '/api/check_github_id', { id: e.target.value });
+			const check = response.data;
+			console.log(check);
+			if (check == true) {
+				setStatus({
+					id: {
+						...status['id'],
+						value: e.target.value,
+						loading: false,
+						responseType: 'success',
+						responseMessage: 'Tester Available',
+					},
+					repo: { ...status['repo'], check: true },
+				});
+			} else {
+				setStatus({
+					id: { ...status['id'], loading: false, responseType: 'fail', responseMessage: 'Already in Test Progress' },
+					repo: { ...status['repo'], check: false },
+				});
+			}
+		} catch (e) {
+			console.error(e);
+			setStatus({
+				id: { ...status['id'], loading: false, responseType: 'fail', responseMessage: 'Internal Server Error...' },
+				repo: { ...status['repo'], check: false },
+			});
 		}
 	};
 	const onKeyUpGithubID = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -29,8 +61,33 @@ const TestPage = () => {
 		}
 	};
 
-	const onBlurRepo = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const onBlurRepo = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		console.log('Blur Repo : ', e.target.value);
+		if (e.target.value === '') return;
+		setStatus({
+			id: { ...status['id'] },
+			repo: { ...status['repo'], loading: true },
+		});
+		try {
+			const response = await axios.post(SERVER_URL + '/api/repository', { id: status['id'].value, repository: e.target.value });
+			if (response.data) {
+				setStatus({
+					id: { ...status['id'] },
+					repo: { ...status['repo'], loading: false, responseType: 'success', responseMessage: 'Repository Clone Success' },
+				});
+			} else {
+				setStatus({
+					id: { ...status['id'] },
+					repo: { ...status['repo'], loading: false, responseType: 'fail', responseMessage: 'Repository Clone Failed' },
+				});
+			}
+		} catch (e) {
+			console.error(e);
+			setStatus({
+				id: { ...status['id'] },
+				repo: { ...status['repo'], loading: false, responseType: 'fail', responseMessage: 'Internel Server Error' },
+			});
+		}
 	};
 
 	const onKeyUpRepo = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -46,7 +103,6 @@ const TestPage = () => {
 					status={status['id']}
 					legend="Github ID"
 					placeholder="Input your github ID"
-					errMsg="Available"
 					onBlur={onBlurGithubID}
 					onKeyUp={onKeyUpGithubID}
 				/>
@@ -56,7 +112,6 @@ const TestPage = () => {
 					status={status['repo']}
 					legend="Github Repository"
 					placeholder="Input your push_swap repository URL for testing"
-					errMsg="Available"
 					onBlur={onBlurRepo}
 					onKeyUp={onKeyUpRepo}
 				/>

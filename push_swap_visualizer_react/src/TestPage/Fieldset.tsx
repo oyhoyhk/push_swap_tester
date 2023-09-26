@@ -2,43 +2,53 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import { IStatus } from './TestPage';
 import { useEffect, useRef } from 'react';
+import Loader from './Loader';
 
 const Fieldset = ({
 	status,
 	legend,
 	placeholder,
-	errMsg,
 	onBlur,
 	onKeyUp,
 }: {
 	legend: string;
 	placeholder: string;
-	errMsg: string;
 	status: IStatus;
 	onBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }) => {
 	const containerRef = useRef<HTMLFieldSetElement>(null);
-
+	const inputRef = useRef<HTMLInputElement>(null);
 	useEffect(() => {
 		setTimeout(() => {
 			if (containerRef.current) {
 				containerRef.current.classList.add('active');
 				console.log('hi');
 			}
+			if (inputRef.current) {
+				inputRef.current.focus();
+			}
 		}, 500);
 	}, []);
 	return (
 		<Container ref={containerRef}>
 			<legend>{legend}</legend>
-			<input type="text" placeholder={placeholder} onBlur={onBlur} onKeyUp={onKeyUp} />
-			<Message>{errMsg}</Message>
+			<input ref={inputRef} type="text" placeholder={placeholder} onBlur={onBlur} onKeyUp={onKeyUp} />
+			<Message>{status.loading ? <Loader /> : <div className={status.responseType}>{status.responseMessage}</div>}</Message>
 		</Container>
 	);
 };
 
 const Message = styled.div`
 	margin: 10px 0 20px 0;
+	position: relative;
+	height: 30px;
+	& .success {
+		color: #0bf277;
+	}
+	& .fail {
+		color: #ff6b6b;
+	}
 `;
 
 const Container = styled.fieldset`
