@@ -123,4 +123,16 @@ async def compile_test(id: str):
     await asyncio.sleep(1)
     return True
 
-@app.get("/")
+
+@app.get("/api/exception_handling_test")
+async def exception_handling_test(id: str):
+    print("exception_handling_test, id : ", id)
+    await asyncio.sleep(1)
+    return True
+
+
+@app.get("/api/push_swap_test/")
+async def push_swap_test(id: str, param_count: int):
+    print(f"push_swap test, id : {id} param_count : {param_count}")
+    await asyncio.sleep(1)
+    return True

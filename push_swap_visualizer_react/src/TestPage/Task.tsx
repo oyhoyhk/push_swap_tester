@@ -7,24 +7,40 @@ interface ITaskInfo extends ITestInfo {
 	id: string;
 	idx: number;
 	setTasks: React.Dispatch<React.SetStateAction<ITestInfo[]>>;
+	setMsg: React.Dispatch<
+		React.SetStateAction<{
+			type: 'running' | 'success' | 'fail';
+			msg: string;
+		}>
+	>;
 }
 
 const SERVER_URL = 'http://localhost:8000';
 
-const Task = ({ name, api, status, id, idx, setTasks }: ITaskInfo) => {
-	const containerRef = useRef<HTMLDivElement>(null);
+const Task = ({ name, api, status, id, idx, setTasks, setMsg }: ITaskInfo) => {
 	useEffect(() => {
-		setTimeout(async () => {
-			if (containerRef.current) {
-				containerRef.current.classList.add('active');
-
-				const result = await axios.get(SERVER_URL + api + '?id=' + id);
-				console.log('api : ', result);
+		async function testTask() {
+			setMsg({ type: 'running', msg: `Running ${name}` });
+			const result = await axios.get(SERVER_URL + api + 'id=' + id);
+			if (result.data) {
+				console.log(name + 'api : ', result);
+				setTasks(prev =>
+					prev.map((task, index) =>
+						task.name === name ? { ...task, status: 'success' } : idx === index ? { ...task, status: 'running' } : task
+					)
+				);
+				setMsg({ type: 'success', msg: `${name} success` });
+			} else {
+				setTasks(prev => prev.map(task => (task.name === name ? { ...task, status: 'fail' } : task)));
+				setMsg({ type: 'fail', msg: `${name} failed` });
 			}
-		}, 1000);
-	}, []);
+		}
+		if (status === 'running') {
+			testTask();
+		}
+	}, [name, idx, id, status, api, setTasks, setMsg]);
 	return (
-		<Container className={status} ref={containerRef} title={name}>
+		<Container className={status} title={name}>
 			{idx}
 		</Container>
 	);
@@ -36,8 +52,6 @@ const Container = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	opacity: 0;
-	transform: translateY(100px);
 	transition: 0.5s;
 	font-size: 1.25rem;
 	font-weight: bold;
@@ -54,11 +68,6 @@ const Container = styled.div`
 	}
 	&.pending {
 		border: 4px solid #cfcfcf;
-	}
-
-	&.active {
-		opacity: 1;
-		transform: translateY(0);
 	}
 `;
 
