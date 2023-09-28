@@ -1,6 +1,5 @@
 from typing import Annotated
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 import git
@@ -34,12 +33,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-templates = Jinja2Templates(directory="public")
 
 
 @app.get("/")
 async def get_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return { "good" : "bad" }
 
 
 ws_connections = {}
@@ -120,19 +118,19 @@ async def clone_git_repository(request: Request):
 @app.get("/api/compile_test")
 async def compile_test(id: str):
     print("id : ", id)
-    await asyncio.sleep(1)
+    await asyncio.sleep(3)
     return True
 
 
 @app.get("/api/exception_handling_test")
 async def exception_handling_test(id: str):
     print("exception_handling_test, id : ", id)
-    await asyncio.sleep(1)
+    await asyncio.sleep(3)
     return True
 
 
 @app.get("/api/push_swap_test/")
 async def push_swap_test(id: str, param_count: int):
     print(f"push_swap test, id : {id} param_count : {param_count}")
-    await asyncio.sleep(1)
+    await asyncio.sleep(3)
     return True
