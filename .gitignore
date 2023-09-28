@@ -26,6 +26,8 @@ archive.zip
 .*.sw?
 .vscode
 .cache
+.venv
+venv
 
 # macOS
 .DS_Store
