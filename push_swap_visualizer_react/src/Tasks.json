@@ -7,6 +7,12 @@
         {
           "name": "make Test",
           "api": "/api/make_test?id=",
+          "next_api": "/api/make_re_link_test?id=",
+          "status": "pending"
+        },
+        {
+          "name": "make re-link Test",
+          "api": "/api/make_re_link_test?id=",
           "next_api": "/api/make_re_test?id=",
           "status": "pending"
         },

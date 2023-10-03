@@ -93,7 +93,8 @@ const ProcessContainer = ({ id }: { id: string }) => {
       }))
     );
     const response = await axios.get(SERVER_URL + api + id);
-    if (response.data) {
+    console.log(api, response.data);
+    if (response.data.type) {
       setTasks(
         tasks.map((task) => ({
           ...task,
