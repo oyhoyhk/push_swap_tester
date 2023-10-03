@@ -8,12 +8,20 @@ import sys
 import os
 import asyncio
 
-script_path = os.path.join(os.path.dirname(__file__), 'scripts')
+script_path = os.path.join(os.path.dirname(__file__), "scripts")
 sys.path.append(script_path)
-repo_path = os.path.join(os.path.dirname(__file__), 'repo')
+repo_path = os.path.join(os.path.dirname(__file__), "repo")
 sys.path.append(repo_path)
 
-from compile_test import test_make, test_make_re_link, test_make_re, test_make_clean, test_make_fclean
+from compile_test import (
+    test_make,
+    test_make_re_link,
+    test_make_re,
+    test_make_clean,
+    test_make_fclean,
+)
+
+from exception_handling_test import test_no_param, test_invalid_params
 
 app = FastAPI()
 
@@ -41,10 +49,9 @@ app.add_middleware(
 )
 
 
-
 @app.get("/")
 async def get_root(request: Request):
-    return { "good" : "bad" }
+    return {"good": "bad"}
 
 
 ws_connections = {}
@@ -127,36 +134,39 @@ async def make_test(id: str):
     print("make test, id : ", id)
     return test_make(id)
 
+
 @app.get("/api/make_re_link_test")
 async def make_test(id: str):
     return test_make_re_link(id)
+
 
 @app.get("/api/make_re_test")
 async def make_re_test(id: str):
     return test_make_re(id)
 
+
 @app.get("/api/make_clean_test")
 async def make_clean_test(id: str):
     return test_make_clean(id)
+
 
 @app.get("/api/make_fclean_test")
 async def make_fclean_test(id: str):
     return test_make_fclean(id)
 
+
 @app.get("/api/no_param_test")
 async def no_param_test(id: str):
-    print("no param test, id : ", id)
-    await asyncio.sleep(1)
-    return { "type" : True, "msg" : "test success"}
+    return test_no_param(id)
+
 
 @app.get("/api/invalid_params_test")
 async def invalid_params(id: str):
-    print("invalid params test, id : ", id)
-    await asyncio.sleep(1)
-    return { "type" : True, "msg" : "test success"}
+    return test_invalid_params(id)
+
 
 @app.get("/api/push_swap_test")
-async def invalid_params(id: str, param_count : int):
+async def invalid_params(id: str, param_count: int):
     print("invalid params test, id : ", id, " param count : ", param_count)
     await asyncio.sleep(1)
-    return { "type" : True, "msg" : "test success"}
+    return {"type": True, "msg": "test success"}
