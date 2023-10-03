@@ -1,7 +1,9 @@
-import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
-import Task from './Task';
-import Response from './Response';
+import styled from "@emotion/styled";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Task from "./Task";
+import Response from "./Response";
+import taskData from "../Tasks.json";
+import axios from "axios";
 
 /*
   Mandetory test 목록
@@ -14,93 +16,181 @@ import Response from './Response';
   3. 
 */
 
+const SERVER_URL = "http://localhost:8000";
+
+function getAPIs(
+  curTestName: string,
+  tasks: {
+    category: string;
+    list: {
+      name: string;
+      api: string;
+      next_api: string;
+      status: string;
+    }[];
+  }[]
+) {
+  for (let task of tasks) {
+    for (let test of task.list) {
+      if (test.name === curTestName) return [test.api, test.next_api];
+    }
+  }
+}
+
+function getTestName(
+  prevTestList: string[],
+  api: string,
+  tasks: {
+    category: string;
+    list: {
+      name: string;
+      api: string;
+      next_api: string;
+      status: string;
+    }[];
+  }[]
+) {
+  for (let task of tasks) {
+    for (let test of task.list) {
+      if (test.api === api && !prevTestList.includes(test.name))
+        return test.name;
+    }
+  }
+}
+
 export interface ITestInfo {
-	name: string;
-	api: string;
-	status: 'running' | 'success' | 'fail' | 'pending';
+  name: string;
+  api: string;
+  next_api: string;
+  status: string;
 }
 
 const ProcessContainer = ({ id }: { id: string }) => {
-	const [tasks, setTasks] = useState<ITestInfo[]>([
-		{ name: 'Compile Test', api: '/api/compile_test?', status: 'pending' },
-		{ name: 'Exception Handling Test', api: '/api/exception_handling_test?', status: 'pending' },
-		{ name: 'Handling 5 params Test', api: '/api/push_swap_test?param_count=5&', status: 'pending' },
-		{ name: 'Handling 100 params Test', api: '/api/push_swap_test?param_count=100&', status: 'pending' },
-		{ name: 'Handling 500 params Test', api: '/api/push_swap_test?param_count=500&', status: 'pending' },
-	]);
-	const [responseMessage, setResponseMessage] = useState<{ type: 'running' | 'success' | 'fail'; msg: string }>({
-		type: 'running',
-		msg: '',
-	});
+  const [tasks, setTasks] = useState(taskData["tasks"]);
 
-	const containerRef = useRef<HTMLFieldSetElement>(null);
-	const taskContainerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLFieldSetElement>(null);
+  const taskContainerRef = useRef<HTMLDivElement>(null);
+  const [currentTest, setCurrentTest] = useState(taskData["start"]);
+  const executedTestList = useRef<string[]>([]);
 
-	useEffect(() => {
-		setTimeout(() => {
-			if (containerRef.current) {
-				containerRef.current.classList.add('active');
-			}
-		}, 500);
-		setTimeout(() => {
-			if (taskContainerRef.current) {
-				taskContainerRef.current.classList.add('active');
-			}
-		}, 1000);
-		setTimeout(() => {
-			setTasks(tasks.map((task, idx) => (idx === 0 ? { ...task, status: 'running' } : task)));
-		}, 1500);
-	}, []);
-	return (
-		<Container ref={containerRef}>
-			<legend>Unit Test Process</legend>
-			<TaskContainer ref={taskContainerRef}>
-				{tasks.map((task, idx) => (
-					<Task key={task.name} {...task} id={id} idx={idx + 1} setTasks={setTasks} setMsg={setResponseMessage} />
-				))}
-			</TaskContainer>
-			<Response {...responseMessage} />
-		</Container>
-	);
+  async function requestTest(curTestName: string) {
+    const result = getAPIs(curTestName, tasks);
+    if (!result) return;
+    const [api, nextAPI] = result;
+    executedTestList.current.push(curTestName);
+    const nextTest = getTestName(executedTestList.current, nextAPI, tasks);
+    if (nextTest === undefined) return;
+    setTasks(
+      tasks.map((task) => ({
+        ...task,
+        list: task.list.map((test) => {
+          if (test.name === curTestName) {
+            return { ...test, status: "running" };
+          } else {
+            return test;
+          }
+        }),
+      }))
+    );
+    const response = await axios.get(SERVER_URL + api + id);
+    if (response.data) {
+      setTasks(
+        tasks.map((task) => ({
+          ...task,
+          list: task.list.map((test) => {
+            if (test.name === curTestName) {
+              return { ...test, status: "success" };
+            } else if (test.name === nextTest) {
+              return { ...test, status: "running" };
+            } else {
+              return test;
+            }
+          }),
+        }))
+      );
+      setCurrentTest(nextTest);
+    } else {
+      setTasks(
+        tasks.map((task) => ({
+          ...task,
+          list: task.list.map((test) => {
+            if (test.name === curTestName) {
+              return { ...test, status: "fail" };
+            } else {
+              return test;
+            }
+          }),
+        }))
+      );
+    }
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.classList.add("active");
+      }
+    }, 500);
+    setTimeout(() => {
+      if (taskContainerRef.current) {
+        taskContainerRef.current.classList.add("active");
+      }
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    requestTest(currentTest);
+  }, [currentTest]);
+  return (
+    <Container ref={containerRef}>
+      <legend>Unit Test Process</legend>
+      <TaskContainer ref={taskContainerRef}>
+        {tasks.map((task, idx) => (
+          <Task key={task["category"]} idx={idx} list={task["list"]} />
+        ))}
+      </TaskContainer>
+      {/*<Response {...responseMessage} />*/}
+    </Container>
+  );
 };
 
 const TaskContainer = styled.div`
-	width: 90%;
-	height: 100px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	opacity: 0;
-	transition: 0.5s;
-	transform: translateY(100px);
-	&.active {
-		opacity: 1;
-		transform: translateY(0);
-	}
+  width: 90%;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0;
+  transition: 0.5s;
+  transform: translateY(100px);
+  &.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const Container = styled.fieldset`
-	border-radius: 10px;
-	width: 570px;
-	height: 190px;
-	padding: 0;
-	margin: 15px auto;
-	& > legend {
-		padding: 0 15px;
-		font-size: 1.5rem;
-		margin-left: 20px;
-	}
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	opacity: 0;
-	transition: 0.5s;
-	transform: translateY(100px);
-	&.active {
-		opacity: 1;
-		transform: translateY(0);
-	}
+  border-radius: 10px;
+  width: 570px;
+  height: 190px;
+  padding: 0;
+  margin: 15px auto;
+  & > legend {
+    padding: 0 15px;
+    font-size: 1.5rem;
+    margin-left: 20px;
+  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 0;
+  transition: 0.5s;
+  transform: translateY(100px);
+  &.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 export default ProcessContainer;

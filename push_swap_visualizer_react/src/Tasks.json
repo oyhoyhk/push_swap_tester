@@ -1,0 +1,191 @@
+{
+  "start": "make Test",
+  "tasks": [
+    {
+      "category": "Compile Test",
+      "list": [
+        {
+          "name": "make Test",
+          "api": "/api/make_test?id=",
+          "next_api": "/api/make_re_test?id=",
+          "status": "pending"
+        },
+        {
+          "name": "make re Test",
+          "api": "/api/make_re_test?id=",
+          "next_api": "/api/make_clean_test?id=",
+          "status": "pending"
+        },
+        {
+          "name": "make clean Test",
+          "api": "/api/make_clean_test?id=",
+          "next_api": "/api/make_fclean_test?id=",
+          "status": "pending"
+        },
+        {
+          "name": "make fclean Test",
+          "api": "/api/make_fclean_test?id=",
+          "next_api": "/api/no_param_test?id=",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "Exception Handling Test",
+      "list": [
+        {
+          "name": "No Param Test",
+          "api": "/api/no_param_test?id=",
+          "next_api": "/api/invalid_params_test?id=",
+          "status": "pending"
+        },
+        {
+          "name": "Invalid Params Test",
+          "api": "/api/invalid_params_test?id=",
+          "next_api": "/api/push_swap_test?param_count=3&id=",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "3 Params Test",
+      "list": [
+        {
+          "name": "3 Params Test 1",
+          "api": "/api/push_swap_test?param_count=3&id=",
+          "next_api": "/api/push_swap_test?param_count=3&id=",
+          "status": "pending"
+        },
+        {
+          "name": "3 Params Test 2",
+          "api": "/api/push_swap_test?param_count=3&id=",
+          "next_api": "/api/push_swap_test?param_count=3&id=",
+          "status": "pending"
+        },
+        {
+          "name": "3 Params Test 3",
+          "api": "/api/push_swap_test?param_count=3&id=",
+          "next_api": "/api/push_swap_test?param_count=3&id=",
+          "status": "pending"
+        },
+        {
+          "name": "3 Params Test 4",
+          "api": "/api/push_swap_test?param_count=3&id=",
+          "next_api": "/api/push_swap_test?param_count=3&id=",
+          "status": "pending"
+        },
+        {
+          "name": "3 Params Test 5",
+          "api": "/api/push_swap_test?param_count=3&id=",
+          "next_api": "/api/push_swap_test?param_count=5&id=",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "5 Params Test",
+      "list": [
+        {
+          "name": "5 Params Test 1",
+          "api": "/api/push_swap_test?param_count=5&id=",
+          "next_api": "/api/push_swap_test?param_count=5&id=",
+          "status": "pending"
+        },
+        {
+          "name": "5 Params Test 2",
+          "api": "/api/push_swap_test?param_count=5&id=",
+          "next_api": "/api/push_swap_test?param_count=5&id=",
+          "status": "pending"
+        },
+        {
+          "name": "5 Params Test 3",
+          "api": "/api/push_swap_test?param_count=5&id=",
+          "next_api": "/api/push_swap_test?param_count=5&id=",
+          "status": "pending"
+        },
+        {
+          "name": "5 Params Test 4",
+          "api": "/api/push_swap_test?param_count=5&id=",
+          "next_api": "/api/push_swap_test?param_count=5&id=",
+          "status": "pending"
+        },
+        {
+          "name": "5 Params Test 5",
+          "api": "/api/push_swap_test?param_count=5&id=",
+          "next_api": "/api/push_swap_test?param_count=100&id=",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "100 Params Test",
+      "list": [
+        {
+          "name": "100 Params Test 1",
+          "api": "/api/push_swap_test?param_count=100&id=",
+          "next_api": "/api/push_swap_test?param_count=100&id=",
+          "status": "pending"
+        },
+        {
+          "name": "100 Params Test 2",
+          "api": "/api/push_swap_test?param_count=100&id=",
+          "next_api": "/api/push_swap_test?param_count=100&id=",
+          "status": "pending"
+        },
+        {
+          "name": "100 Params Test 3",
+          "api": "/api/push_swap_test?param_count=100&id=",
+          "next_api": "/api/push_swap_test?param_count=100&id=",
+          "status": "pending"
+        },
+        {
+          "name": "100 Params Test 4",
+          "api": "/api/push_swap_test?param_count=100&id=",
+          "next_api": "/api/push_swap_test?param_count=100&id=",
+          "status": "pending"
+        },
+        {
+          "name": "100 Params Test 5",
+          "api": "/api/push_swap_test?param_count=100&id=",
+          "next_api": "/api/push_swap_test?param_count=500&id=",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "500 Params Test",
+      "list": [
+        {
+          "name": "500 Params Test 1",
+          "api": "/api/push_swap_test?param_count=500&id=",
+          "next_api": "/api/push_swap_test?param_count=500&id=",
+          "status": "pending"
+        },
+        {
+          "name": "500 Params Test 2",
+          "api": "/api/push_swap_test?param_count=500&id=",
+          "next_api": "/api/push_swap_test?param_count=500&id=",
+          "status": "pending"
+        },
+        {
+          "name": "500 Params Test 3",
+          "api": "/api/push_swap_test?param_count=500&id=",
+          "next_api": "/api/push_swap_test?param_count=500&id=",
+          "status": "pending"
+        },
+        {
+          "name": "500 Params Test 4",
+          "api": "/api/push_swap_test?param_count=500&id=",
+          "next_api": "/api/push_swap_test?param_count=500&id=",
+          "status": "pending"
+        },
+        {
+          "name": "500 Params Test 5",
+          "api": "/api/push_swap_test?param_count=500&id=",
+          "next_api": "",
+          "status": "pending"
+        }
+      ]
+    }
+  ]
+}

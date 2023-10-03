@@ -115,22 +115,44 @@ async def clone_git_repository(request: Request):
         return False
 
 
-@app.get("/api/compile_test")
-async def compile_test(id: str):
-    print("id : ", id)
-    await asyncio.sleep(3)
+@app.get("/api/make_test")
+async def make_test(id: str):
+    print("make test, id : ", id)
+    await asyncio.sleep(1)
     return True
 
-
-@app.get("/api/exception_handling_test")
-async def exception_handling_test(id: str):
-    print("exception_handling_test, id : ", id)
-    await asyncio.sleep(3)
+@app.get("/api/make_re_test")
+async def make_re_test(id: str):
+    print("make re test, id : ", id)
+    await asyncio.sleep(1)
     return True
 
+@app.get("/api/make_clean_test")
+async def make_clean_test(id: str):
+    print("make clean test, id : ", id)
+    await asyncio.sleep(1)
+    return True
 
-@app.get("/api/push_swap_test/")
-async def push_swap_test(id: str, param_count: int):
-    print(f"push_swap test, id : {id} param_count : {param_count}")
-    await asyncio.sleep(3)
+@app.get("/api/make_fclean_test")
+async def make_fclean_test(id: str):
+    print("make fclean test, id : ", id)
+    await asyncio.sleep(1)
+    return True
+
+@app.get("/api/no_param_test")
+async def no_param_test(id: str):
+    print("no param test, id : ", id)
+    await asyncio.sleep(1)
+    return True
+
+@app.get("/api/invalid_params_test")
+async def invalid_params(id: str):
+    print("invalid params test, id : ", id)
+    await asyncio.sleep(1)
+    return True
+
+@app.get("/api/push_swap_test")
+async def invalid_params(id: str, param_count : int):
+    print("invalid params test, id : ", id, " param count : ", param_count)
+    await asyncio.sleep(1)
     return True
