@@ -93,17 +93,67 @@ def test_param_duplication(id: str):
         os.chdir(original_directory)
 
 
-def create_test_case(param_count: int, min_val=1, max_val=500):
-    if param_count > (max_val - min_val + 1):
-        raise ValueError("Cannot generate n unique integers in the given range.")
-
+def create_test_case(param_count: int, min_val=1):
     unique_integers = set()
     while len(unique_integers) < param_count:
-        num = random.randint(min_val, max_val)
-        char = chr(num)
-        unique_integers.add(char)
+        num = random.randint(min_val, param_count)
+
+        print("create test case", num)
+        unique_integers.add(num)
 
     return list(unique_integers)
+
+
+def push_swap(stack_a: list[int], cmd_list: list[str]):
+    stack_b = []
+
+    for cmd in cmd_list:
+        if cmd == "sa":
+            if len(stack_a) >= 2:
+                stack_a[-1], stack_a[-2] = stack_a[-2], stack_a[-1]
+        elif cmd == "sb":
+            if len(stack_b) >= 2:
+                stack_b[-1], stack_b[-2] = stack_b[-2], stack_b[-1]
+        elif cmd == "ss":
+            if len(stack_a) >= 2:
+                stack_a[-1], stack_a[-2] = stack_a[-2], stack_a[-1]
+            if len(stack_b) >= 2:
+                stack_b[-1], stack_b[-2] = stack_b[-2], stack_b[-1]
+        elif cmd == "ra":
+            tmp = stack_a.pop()
+            stack_a.insert(0, tmp)
+        elif cmd == "rb":
+            tmp = stack_b.pop()
+            stack_b.insert(0, tmp)
+        elif cmd == "rr":
+            tmp = stack_a.pop()
+            stack_a.insert(0, tmp)
+            tmp = stack_b.pop()
+            stack_b.insert(0, tmp)
+        elif cmd == "rra":
+            tmp = stack_a.pop(0)
+            stack_a.append(tmp)
+        elif cmd == "rrb":
+            tmp = stack_b.pop(0)
+            stack_b.append(tmp)
+        elif cmd == "rrr":
+            tmp = stack_a.pop(0)
+            stack_a.append(tmp)
+            tmp = stack_b.pop(0)
+            stack_b.append(tmp)
+        elif cmd == "pa":
+            if len(stack_b) > 0:
+                tmp = stack_b.pop()
+                stack_a.append(tmp)
+        elif cmd == "pb":
+            if len(stack_a) > 0:
+                tmp = stack_a.pop()
+                stack_b.append(tmp)
+
+
+def checker(stack: list[int]):
+    for num in stack:
+        print(num)
 
 
 def test_push_swap(id: str, param_count: int):
@@ -112,17 +162,26 @@ def test_push_swap(id: str, param_count: int):
         dir = os.path.join("repo", id)
         os.chdir(dir)
 
-        list = create_test_case(param_count)
-        list.insert(0, "./push_swap")
+        origin_list = create_test_case(param_count)
+        for item in origin_list:
+            print("origin_list", item)
+        input_list = list(map(str, origin_list))
+        for item in input_list:
+            print("input_list", item)
+        input_list.insert(0, "./push_swap")
 
-        print("list")
-        for target in list:
-            print(target)
         result = subprocess.run(
-            list, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+            input_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
-        print("push_swap_test")
+        answer_list = result.stdout.split("\n")
+        answer_list.pop(-1)
+
+        push_swap(origin_list, answer_list)
+
         print(result.stdout)
+        print("push_swap_result")
+        checker(origin_list)
+
         # for testcase in duplicated_params_testcases:
         #     result = subprocess.run(
         #         testcase,
@@ -146,4 +205,4 @@ if __name__ == "__main__":
     test_no_param("42YerevansProjects")
     print(test_invalid_params("42YerevansProjects"))
     print(test_param_duplication("42YerevansProjects"))
-    test_push_swap("42YerevansProjects", 5)
+    test_push_swap("42YerevanProjects", 25)

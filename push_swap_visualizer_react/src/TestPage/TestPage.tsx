@@ -162,7 +162,7 @@ const TestPage = () => {
 				/>
 			)}
 			{/* {processToggle && status['id'].value && <ProcessContainer id={status['id'].value} />} */}
-			{<ProcessContainer id={'42YerevansProjects'} />}
+			{<ProcessContainer id={'42YerevanProjects'} />}
 		</Container>
 	);
 };
