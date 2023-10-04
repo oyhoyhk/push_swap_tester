@@ -21,7 +21,11 @@ from compile_test import (
     test_make_fclean,
 )
 
-from exception_handling_test import test_no_param, test_invalid_params
+from exception_handling_test import (
+    test_no_param,
+    test_invalid_params,
+    test_param_duplication,
+)
 
 app = FastAPI()
 
@@ -161,8 +165,13 @@ async def no_param_test(id: str):
 
 
 @app.get("/api/invalid_params_test")
-async def invalid_params(id: str):
+async def invalid_params_test(id: str):
     return test_invalid_params(id)
+
+
+@app.get("/api/duplicated_params_test")
+async def duplicated_params_test(id: str):
+    return test_param_duplication(id)
 
 
 @app.get("/api/push_swap_test")
