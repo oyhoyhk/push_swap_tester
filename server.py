@@ -27,6 +27,8 @@ from exception_handling_test import (
     test_param_duplication,
 )
 
+from push_swap_test import test_push_swap
+
 app = FastAPI()
 
 
@@ -175,7 +177,5 @@ async def duplicated_params_test(id: str):
 
 
 @app.get("/api/push_swap_test")
-async def invalid_params(id: str, param_count: int):
-    print("invalid params test, id : ", id, " param count : ", param_count)
-    await asyncio.sleep(1)
-    return {"type": True, "msg": "test success"}
+async def push_swap_test(id: str, param_count: int):
+    return test_push_swap(id, param_count)
