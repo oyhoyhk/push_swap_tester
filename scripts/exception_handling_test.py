@@ -1,5 +1,6 @@
 import os
 import subprocess
+from util_scripts import cleanup_function
 
 
 def test_no_param(id: str):
@@ -18,9 +19,14 @@ def test_no_param(id: str):
 
         if len(result.stdout) == 0:
             return {"type": True, "msg": "No param test Success"}
+        else:
+            cleanup_function(id)
+            return {"type": False, "msg": "No Param test Failed"}
     except FileNotFoundError:
+        cleanup_function(id)
         return {"type": False, "msg": "No param test Failed"}
     except Exception as e:
+        cleanup_function(id)
         return {"type": False, "msg": "No param test Failed"}
     finally:
         os.chdir(original_directory)
@@ -49,11 +55,14 @@ def test_invalid_params(id: str):
                 text=True,
             )
             if result.stdout != "Error\n":
+                cleanup_function(id)
                 return {"type": False, "msg": "Invalid params test Failed"}
         return {"type": True, "msg": "Invalid params test Success"}
     except FileNotFoundError:
+        cleanup_function(id)
         return {"type": False, "msg": "Invalid params test Failed"}
     except Exception as e:
+        cleanup_function(id)
         return {"type": False, "msg": "Invalid params test Failed"}
     finally:
         os.chdir(original_directory)
@@ -82,21 +91,14 @@ def test_param_duplication(id: str):
                 text=True,
             )
             if result.stdout != "Error\n":
+                cleanup_function(id)
                 return {"type": False, "msg": "Duplicated params test Failed"}
         return {"type": True, "msg": "Duplicated params test Success"}
     except FileNotFoundError:
+        cleanup_function(id)
         return {"type": False, "msg": "Duplicated params test Failed"}
     except Exception as e:
+        cleanup_function(id)
         return {"type": False, "msg": "Duplicated params test Failed"}
     finally:
-
         os.chdir(original_directory)
-
-
-
-if __name__ == "__main__":
-    print("test_no_params")
-    test_no_param("42YerevansProjects")
-    print(test_invalid_params("42YerevanProjects"))
-    print(test_param_duplication("42YerevanProjects"))
-    print(test_push_swap("42YerevanProjects", 25))

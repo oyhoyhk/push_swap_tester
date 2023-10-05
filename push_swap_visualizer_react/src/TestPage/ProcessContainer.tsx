@@ -84,9 +84,9 @@ const ProcessContainer = ({ id }: { id: string }) => {
 			} nextTest : ${nextTest}`
 		);
 		setTasks(
-			tasks.map((task) => ({
+			tasks.map(task => ({
 				...task,
-				list: task.list.map((test) => {
+				list: task.list.map(test => {
 					if (test.name === curTestName) {
 						return { ...test, status: 'running' };
 					} else {
@@ -99,9 +99,9 @@ const ProcessContainer = ({ id }: { id: string }) => {
 		console.log(curTestName, api, response.data);
 		if (response.data.type) {
 			setTasks(
-				tasks.map((task) => ({
+				tasks.map(task => ({
 					...task,
-					list: task.list.map((test) => {
+					list: task.list.map(test => {
 						if (test.name === curTestName) {
 							return { ...test, status: 'success' };
 						} else if (test.name === nextTest) {
@@ -113,11 +113,12 @@ const ProcessContainer = ({ id }: { id: string }) => {
 				}))
 			);
 			if (nextTest) setCurrentTest(nextTest);
+			else await axios.get(SERVER_URL + '/api/cleanup?id=' + id);
 		} else {
 			setTasks(
-				tasks.map((task) => ({
+				tasks.map(task => ({
 					...task,
-					list: task.list.map((test) => {
+					list: task.list.map(test => {
 						if (test.name === curTestName) {
 							return { ...test, status: 'fail' };
 						} else {

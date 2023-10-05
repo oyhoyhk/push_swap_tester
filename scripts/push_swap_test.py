@@ -1,6 +1,8 @@
 import os
 import random
 import subprocess
+from util_scripts import cleanup_function
+
 
 def create_test_case(param_count: int, min_val=1):
     unique_integers = []
@@ -70,12 +72,12 @@ def checker(stack: list[int]):
         prev = cur
     return True
 
+
 def test_push_swap(id: str, param_count: int):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)
         os.chdir(dir)
-
 
         origin_list = create_test_case(param_count)
         input_list = list(map(str, list(reversed(origin_list))))
@@ -86,7 +88,6 @@ def test_push_swap(id: str, param_count: int):
         )
         answer_list = result.stdout.split("\n")
         answer_list.pop(-1)
-
 
         push_swap_result = push_swap(origin_list, answer_list)
 
@@ -102,11 +103,14 @@ def test_push_swap(id: str, param_count: int):
         if is_sorted == True:
             return {"type": True, "msg": "Push swap test Success"}
         else:
+            cleanup_function(id)
             return {"type": False, "msg": "Push swap test Failed"}
     except FileNotFoundError:
+        cleanup_function(id)
         return {"type": False, "msg": "Push swap test Failed"}
     except Exception as e:
         print(e)
+        cleanup_function(id)
         return {"type": False, "msg": "Push swap test Failed"}
     finally:
         os.chdir(original_directory)

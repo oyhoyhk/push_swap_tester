@@ -161,8 +161,8 @@ const TestPage = () => {
 					onKeyUp={onKeyUpRepo}
 				/>
 			)}
-			{/* {processToggle && status['id'].value && <ProcessContainer id={status['id'].value} />} */}
-			{<ProcessContainer id={'42YerevanProjects'} />}
+			{processToggle && status['id'].value && <ProcessContainer id={status['id'].value} />}
+			{/* {<ProcessContainer id={'42YerevanProjects'} />} */}
 		</Container>
 	);
 };

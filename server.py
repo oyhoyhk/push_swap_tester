@@ -28,6 +28,7 @@ from exception_handling_test import (
 )
 
 from push_swap_test import test_push_swap
+from util_scripts import cleanup_function
 
 app = FastAPI()
 
@@ -80,6 +81,11 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         ws_connections.remove(websocket)
         print("ws disconnected")
+
+
+async def schedule_cleanup(id):
+    await asyncio.sleep(60)
+    cleanup_function(id)
 
 
 @app.post("/api/repo")
@@ -138,21 +144,25 @@ async def clone_git_repository(request: Request):
 @app.get("/api/make_test")
 async def make_test(id: str):
     print("make test, id : ", id)
+    asyncio.create_task(schedule_cleanup(id))
     return test_make(id)
 
 
 @app.get("/api/make_re_link_test")
 async def make_test(id: str):
+    asyncio.create_task(schedule_cleanup(id))
     return test_make_re_link(id)
 
 
 @app.get("/api/make_re_test")
 async def make_re_test(id: str):
+    asyncio.create_task(schedule_cleanup(id))
     return test_make_re(id)
 
 
 @app.get("/api/make_clean_test")
 async def make_clean_test(id: str):
+    asyncio.create_task(schedule_cleanup(id))
     return test_make_clean(id)
 
 
@@ -163,19 +173,29 @@ async def make_fclean_test(id: str):
 
 @app.get("/api/no_param_test")
 async def no_param_test(id: str):
+    asyncio.create_task(schedule_cleanup(id))
     return test_no_param(id)
 
 
 @app.get("/api/invalid_params_test")
 async def invalid_params_test(id: str):
+    asyncio.create_task(schedule_cleanup(id))
     return test_invalid_params(id)
 
 
 @app.get("/api/duplicated_params_test")
 async def duplicated_params_test(id: str):
+    asyncio.create_task(schedule_cleanup(id))
     return test_param_duplication(id)
 
 
 @app.get("/api/push_swap_test")
 async def push_swap_test(id: str, param_count: int):
+    asyncio.create_task(schedule_cleanup(id))
     return test_push_swap(id, param_count)
+
+
+@app.get("/api/cleanup")
+def get_cleanup_request(id: str):
+    cleanup_function(id)
+    print("cleanup " + id + "'s repo")
