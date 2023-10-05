@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import axios from 'axios';
 import { useState } from 'react';
-import Fieldset from './FieldSet';
+import Fieldset from './Fieldset';
 import ProcessContainer from './ProcessContainer';
 
 const SERVER_URL = 'http://localhost:8000';
@@ -10,6 +10,7 @@ export interface IStatus {
 	check: boolean;
 	value: string | null;
 	loading: boolean;
+	fixed: boolean;
 	responseType: 'success' | 'fail';
 	responseMessage: string;
 }
@@ -25,6 +26,7 @@ const TestPage = () => {
 		id: {
 			check: true,
 			value: null,
+			fixed: false,
 			loading: false,
 			responseType: 'success',
 			responseMessage: '',
@@ -32,6 +34,7 @@ const TestPage = () => {
 		repo: {
 			check: false,
 			value: null,
+			fixed: false,
 			loading: false,
 			responseType: 'success',
 			responseMessage: '',
@@ -52,6 +55,7 @@ const TestPage = () => {
 						...status['id'],
 						value: e.target.value,
 						loading: false,
+						fixed: true,
 						responseType: 'success',
 						responseMessage: 'Tester Available',
 					},
@@ -105,6 +109,7 @@ const TestPage = () => {
 					repo: {
 						...status['repo'],
 						loading: false,
+						fixed: true,
 						responseType: 'success',
 						responseMessage: 'Repository Clone Success',
 					},
