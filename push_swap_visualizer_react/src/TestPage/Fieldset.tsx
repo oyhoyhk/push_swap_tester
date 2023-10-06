@@ -1,34 +1,51 @@
 import styled from '@emotion/styled';
 import { IStatus } from './TestPage';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Loader from './Loader';
 
-const Modify = () => {
-	const containerRef = useRef<HTMLDivElement>(null);
-	useEffect(() => {
-		setTimeout(() => {
-			if (containerRef.current) {
-				containerRef.current.classList.add('active');
-			}
-		}, 100);
-	}, []);
-	return <ModifyContainer ref={containerRef}>Modify</ModifyContainer>;
+const Modal = ({ handleModify }: { handleModify: (value: boolean) => Promise<void> }) => {
+	return (
+		<ModalContainer>
+			<div className="text">Are you sure to modify?</div>
+			<div className="subText">This task may take a few Seconds.</div>
+			<div className="buttonContainer">
+				<button onClick={() => handleModify(true)}>Sure</button>
+				<button onClick={() => handleModify(false)}>Cancel</button>
+			</div>
+		</ModalContainer>
+	);
 };
 
-const ModifyContainer = styled.div`
-	position: absolute;
-	right: 5%;
-	top: 10px;
-	border-radius: 5px;
-	border: 2px solid white;
-	cursor: pointer;
-	padding: 5px;
-	transition: 0.5s;
-	filter: blur(50px);
-	opacity: 0;
-	&.active {
-		filter: blur(0);
-		opacity: 1;
+const ModalContainer = styled.div`
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	& > .text {
+		font-size: 1.5rem;
+	}
+	& > .subText {
+		font-size: 0.9rem;
+		color: gray;
+	}
+	& > .buttonContainer {
+		margin-top: 15px;
+		& > button {
+			background: none;
+			outline: none;
+			border: 2px solid gray;
+			color: gray;
+			border-radius: 5px;
+			padding: 5px 10px;
+			cursor: pointer;
+			&:first-of-type {
+				margin-right: 20px;
+				border: 2px solid white;
+				color: white;
+			}
+		}
 	}
 `;
 
@@ -38,15 +55,18 @@ const Fieldset = ({
 	placeholder,
 	onBlur,
 	onKeyUp,
+	onModify,
 }: {
 	legend: string;
 	placeholder: string;
 	status: IStatus;
 	onBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+	onModify: () => Promise<void>;
 }) => {
 	const containerRef = useRef<HTMLFieldSetElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const [modal, setModal] = useState(false);
 	useEffect(() => {
 		setTimeout(() => {
 			if (containerRef.current) {
@@ -58,23 +78,70 @@ const Fieldset = ({
 			}
 		}, 500);
 	}, []);
+	const clickToModify = () => {
+		if (status.fixed) setModal(true);
+	};
+	const handleModify = async (value: boolean) => {
+		if (value) {
+			await onModify();
+			if (inputRef.current) inputRef.current.focus();
+		}
+		setModal(false);
+	};
+
 	return (
 		<Container ref={containerRef}>
 			<legend>{legend}</legend>
-			<input
-				className={status.fixed ? 'fixed' : ''}
-				disabled={status.fixed}
-				ref={inputRef}
-				type="text"
-				placeholder={placeholder}
-				onBlur={onBlur}
-				onKeyUp={onKeyUp}
-			/>
-			{status.fixed && <Modify />}
-			<Message>{status.loading ? <Loader /> : <div className={status.responseType}>{status.responseMessage}</div>}</Message>
+			<InnerContainer className={modal ? 'toggle' : ''}>
+				<Wrapper>
+					<input ref={inputRef} type="text" placeholder={placeholder} onBlur={onBlur} onKeyUp={onKeyUp} onClick={clickToModify} />
+					<Message>{status.loading ? <Loader /> : <div className={status.responseType}>{status.responseMessage}</div>}</Message>
+				</Wrapper>
+				<Wrapper>
+					<Modal handleModify={handleModify} />
+				</Wrapper>
+			</InnerContainer>
 		</Container>
 	);
 };
+
+const Wrapper = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	height: 112px;
+	& > input {
+		width: 90%;
+		height: 40px;
+		margin: 10px auto;
+		border: none;
+		outline: none;
+		background: transparent;
+		border-bottom: 2px solid gray;
+		text-align: center;
+		cursor: pointer;
+		font-size: 1.25rem;
+		&:focus {
+			border-bottom: 2px solid white;
+		}
+		color: white;
+		&.fixed {
+			color: gray;
+			cursor: not-allowed;
+		}
+	}
+`;
+
+const InnerContainer = styled.div`
+	width: 100%;
+	height: 240px;
+	transition: 0.5s cubic-bezier(0.17, 0.67, 0.8, 1.12);
+	transform: translateY(55px);
+	&.toggle {
+		transform: translateY(-65px);
+	}
+`;
 
 const Message = styled.div`
 	margin: 10px 0 20px 0;
@@ -92,8 +159,10 @@ const Container = styled.fieldset`
 	position: relative;
 	border-radius: 10px;
 	width: 570px;
+	height: 150px;
 	padding: 0;
 	margin: 15px auto;
+	overflow: hidden;
 	& > legend {
 		padding: 0 15px;
 		font-size: 1.5rem;
@@ -109,25 +178,6 @@ const Container = styled.fieldset`
 	&.active {
 		opacity: 1;
 		transform: translateY(0);
-	}
-	& > input {
-		width: 90%;
-		height: 40px;
-		margin: 10px auto;
-		border: none;
-		outline: none;
-		background: transparent;
-		border-bottom: 2px solid gray;
-		text-align: center;
-		font-size: 1.25rem;
-		&:focus {
-			border-bottom: 2px solid white;
-		}
-		color: white;
-		&.fixed {
-			color: gray;
-			cursor: not-allowed;
-		}
 	}
 `;
 

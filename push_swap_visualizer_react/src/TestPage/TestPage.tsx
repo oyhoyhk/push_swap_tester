@@ -91,6 +91,29 @@ const TestPage = () => {
 		}
 	};
 
+	const clickModifyGithubID = async () => {
+		setStatus({
+			id: {
+				check: true,
+				value: null,
+				fixed: false,
+				loading: false,
+				responseType: 'success',
+				responseMessage: '',
+			},
+			repo: {
+				check: false,
+				value: null,
+				fixed: false,
+				loading: false,
+				responseType: 'success',
+				responseMessage: '',
+			},
+		});
+		await axios.get(SERVER_URL + '/api/cleanup?id=' + status['id'].value);
+		setProcessToggle(false);
+	};
+
 	const onBlurRepo = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		console.log('Blur Repo : ', e.target.value);
 		if (e.target.value === '') return;
@@ -146,6 +169,25 @@ const TestPage = () => {
 			e.currentTarget.blur();
 		}
 	};
+
+	const clickModifyRepo = async () => {
+		setStatus({
+			id: {
+				...status['id'],
+			},
+			repo: {
+				check: true,
+				value: null,
+				fixed: false,
+				loading: false,
+				responseType: 'success',
+				responseMessage: '',
+			},
+		});
+		await axios.get(SERVER_URL + '/api/cleanup?id=' + status['id'].value);
+		setProcessToggle(false);
+	};
+
 	return (
 		<Container>
 			{status['id'].check && (
@@ -155,6 +197,7 @@ const TestPage = () => {
 					placeholder="Input your github ID"
 					onBlur={onBlurGithubID}
 					onKeyUp={onKeyUpGithubID}
+					onModify={clickModifyGithubID}
 				/>
 			)}
 			{status['repo'].check && (
@@ -164,6 +207,7 @@ const TestPage = () => {
 					placeholder="Input your push_swap repository URL for testing"
 					onBlur={onBlurRepo}
 					onKeyUp={onKeyUpRepo}
+					onModify={clickModifyRepo}
 				/>
 			)}
 			{processToggle && status['id'].value && <ProcessContainer id={status['id'].value} />}
