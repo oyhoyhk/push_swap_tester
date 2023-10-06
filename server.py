@@ -7,6 +7,9 @@ from pydantic import BaseModel
 import sys
 import os
 import asyncio
+from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import datetime, timedelta
+import shutil
 
 script_path = os.path.join(os.path.dirname(__file__), "scripts")
 sys.path.append(script_path)
@@ -28,9 +31,34 @@ from exception_handling_test import (
 )
 
 from push_swap_test import test_push_swap
-from util_scripts import cleanup_function
 
 app = FastAPI()
+
+scheduler = BackgroundScheduler()
+
+
+def clean_up_repo(id: str):
+    directory_path = os.path.join(os.path.__file__, "repo", id)
+    try:
+        shutil.rmtree(directory_path)
+        print(f"{directory_path} 삭제 성공")
+    except OSError as e:
+        print(f"디렉토리 삭제 중 오류 발생: {e}")
+
+
+job_dict = {}
+scheduler.start()
+
+
+def update_schedule(id: str, directory: str):
+    print("in update_schedule", id, "directory : ", directory)
+    if id in job_dict:
+        scheduler.remove_job(id)
+        del job_dict[id]
+    start_time = datetime.now() + timedelta(minutes=1)
+    scheduler.add_job(clean_up_repo, "date", [directory], run_date=start_time, id=id)
+    job_dict[id] = True
+    print("job_dict : ", job_dict)
 
 
 @app.on_event("startup")
@@ -81,11 +109,6 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         ws_connections.remove(websocket)
         print("ws disconnected")
-
-
-async def schedule_cleanup(id):
-    await asyncio.sleep(60)
-    cleanup_function(id)
 
 
 @app.post("/api/repo")
@@ -144,58 +167,86 @@ async def clone_git_repository(request: Request):
 @app.get("/api/make_test")
 async def make_test(id: str):
     print("make test, id : ", id)
-    asyncio.create_task(schedule_cleanup(id))
-    return test_make(id)
+    result = test_make(id)
+    if not result["type"]:
+        directory = os.path.join(os.getcwd(), "repo", id)
+        update_schedule(id, directory)
+    return result
 
 
 @app.get("/api/make_re_link_test")
 async def make_test(id: str):
-    asyncio.create_task(schedule_cleanup(id))
-    return test_make_re_link(id)
+    result = test_make_re_link(id)
+    if not result["type"]:
+        directory = os.path.join(os.getcwd(), "repo", id)
+        update_schedule(id, directory)
+    return result
 
 
 @app.get("/api/make_re_test")
 async def make_re_test(id: str):
-    asyncio.create_task(schedule_cleanup(id))
-    return test_make_re(id)
+    result = test_make_re(id)
+    if not result["type"]:
+        directory = os.path.join(os.getcwd(), "repo", id)
+        update_schedule(id, directory)
+    return result
 
 
 @app.get("/api/make_clean_test")
 async def make_clean_test(id: str):
-    asyncio.create_task(schedule_cleanup(id))
-    return test_make_clean(id)
+    result = test_make_clean(id)
+    if not result["type"]:
+        directory = os.path.join(os.getcwd(), "repo", id)
+        update_schedule(id, directory)
+    return result
 
 
 @app.get("/api/make_fclean_test")
 async def make_fclean_test(id: str):
-    return test_make_fclean(id)
+    result = test_make_fclean(id)
+    if not result["type"]:
+        directory = os.path.join(os.getcwd(), "repo", id)
+        update_schedule(id, directory)
+    return result
 
 
 @app.get("/api/no_param_test")
 async def no_param_test(id: str):
-    asyncio.create_task(schedule_cleanup(id))
-    return test_no_param(id)
+    result = test_no_param(id)
+    if not result["type"]:
+        directory = os.path.join(os.getcwd(), "repo", id)
+        update_schedule(id, directory)
+    return result
 
 
 @app.get("/api/invalid_params_test")
 async def invalid_params_test(id: str):
-    asyncio.create_task(schedule_cleanup(id))
-    return test_invalid_params(id)
+    result = test_invalid_params(id)
+    if not result["type"]:
+        directory = os.path.join(os.getcwd(), "repo", id)
+        update_schedule(id, directory)
+    return result
 
 
 @app.get("/api/duplicated_params_test")
 async def duplicated_params_test(id: str):
-    asyncio.create_task(schedule_cleanup(id))
-    return test_param_duplication(id)
+    result = test_param_duplication(id)
+    if not result["type"]:
+        directory = os.path.join(os.getcwd(), "repo", id)
+        update_schedule(id, directory)
+    return result
 
 
 @app.get("/api/push_swap_test")
 async def push_swap_test(id: str, param_count: int):
-    asyncio.create_task(schedule_cleanup(id))
-    return test_push_swap(id, param_count)
+    result = test_push_swap(id, param_count)
+    if not result["type"]:
+        directory = os.path.join(os.getcwd(), "repo", id)
+        update_schedule(id, directory)
+    return result
 
 
 @app.get("/api/cleanup")
 def get_cleanup_request(id: str):
-    cleanup_function(id)
+    clean_up_repo(id)
     print("cleanup " + id + "'s repo")

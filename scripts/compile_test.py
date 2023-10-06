@@ -1,6 +1,5 @@
 import os
 import subprocess
-from util_scripts import cleanup_function
 
 
 def test_make(id: str):
@@ -23,7 +22,6 @@ def test_make(id: str):
         return {"type": True, "msg": "make test Success"}
     except Exception as e:
         print("invalid Path", e)
-        cleanup_function(id)
         return {"type": False, "msg": "make test Failed"}
     finally:
         os.chdir(original_directory)
@@ -46,11 +44,9 @@ def test_make_re_link(id: str):
         if "make: Nothing to be done for `all'." in output:
             return {"type": True, "msg": "make re-link test Success"}
         else:
-            cleanup_function(id)
             return {"type": False, "msg": "make re-link test Failed"}
     except Exception as e:
         print("invalid Path", e)
-        cleanup_function(id)
         return {"type": False, "msg": "make re-link test Failed"}
     finally:
         os.chdir(original_directory)
@@ -71,7 +67,6 @@ def test_make_re(id: str):
         return {"type": True, "msg": "Make Test Success"}
     except Exception as e:
         print("invalid Path", e)
-        cleanup_function(id)
         return {"type": False, "msg": "make re test failed"}
     finally:
         os.chdir(original_directory)
@@ -89,7 +84,6 @@ def test_make_clean(id: str):
         for root, dirs, files in os.walk(os.getcwd()):
             for file in files:
                 if file.endswith(".o"):
-                    cleanup_function(id)
                     return {"type": False, "msg": "make clean test Failed"}
 
         subprocess.run(
@@ -98,7 +92,6 @@ def test_make_clean(id: str):
         return {"type": True, "msg": "make clean test Success"}
     except Exception as e:
         print("invalid Path", e)
-        cleanup_function(id)
         return {"type": False, "msg": "make clean test Failed"}
     finally:
         os.chdir(original_directory)
@@ -119,7 +112,6 @@ def test_make_fclean(id: str):
         for root, dirs, files in os.walk(os.getcwd()):
             for file in files:
                 if file.endswith(".o") or file == "push_swap":
-                    cleanup_function(id)
                     return {"type": False, "msg": "make clean test Failed"}
 
         subprocess.run(
@@ -127,7 +119,6 @@ def test_make_fclean(id: str):
         )
         return {"type": True, "msg": "make clean test Success"}
     except Exception as e:
-        cleanup_function(id)
         print("invalid Path", e)
         return {"type": False, "msg": "make clean test Failed"}
     finally:

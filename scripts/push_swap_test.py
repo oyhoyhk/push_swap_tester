@@ -98,6 +98,7 @@ def test_push_swap(id: str, param_count: int):
         print("origin : ", origin_list)
         print("result : ", push_swap_result)
         print("check  : ", is_sorted)
+        print("count : ", len(answer_list))
         print("-------------------------------------")
 
         if is_sorted == True:
