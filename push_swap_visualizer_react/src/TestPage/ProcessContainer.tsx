@@ -15,7 +15,7 @@ import axios from "axios";
   3. 
 */
 
-const SERVER_URL = "http://localhost:8000";
+const SERVER_URL = import.meta.env.VITE_API_URL;
 
 function getAPIs(
   curTestName: string,

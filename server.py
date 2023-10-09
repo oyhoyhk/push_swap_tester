@@ -9,7 +9,10 @@ import sys
 import os
 import asyncio
 from apscheduler.schedulers.background import BackgroundScheduler
-from starlette.responses import FileResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware import Middleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.responses import FileResponse, RedirectResponse
 from datetime import datetime, timedelta
 import shutil
 
@@ -36,6 +39,19 @@ from exception_handling_test import (
 from push_swap_test import test_push_swap
 
 app = FastAPI()
+
+#app.add_middleware(
+#    Middleware(TrustedHostMiddleware, allowed_hosts=["yourdomain.com"])
+#)
+
+class RedirectToHomeMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        if request.url.path not in ("/", "/api", "/static"):
+            return RedirectResponse(url="/")
+        response = await call_next(request)
+        return response
+
+#app.add_middleware(RedirectToHomeMiddleware)
 
 scheduler = BackgroundScheduler()
 
