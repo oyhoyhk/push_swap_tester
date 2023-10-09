@@ -72,6 +72,12 @@ def checker(stack: list[int]):
         prev = cur
     return True
 
+max_count = {
+    3 : 3,
+    5 : 12,
+    100 : 1500,
+    500 : 11500,
+}
 
 def test_push_swap(id: str, param_count: int):
     original_directory = os.getcwd()
@@ -101,8 +107,11 @@ def test_push_swap(id: str, param_count: int):
         print("count : ", len(answer_list))
         print("-------------------------------------")
 
-        if is_sorted == True:
-            return {"type": True, "msg": "Push swap test Success"}
+        if is_sorted == True :
+            if len(answer_list) <= max_count[param_count]:
+                return {"type": True, "msg": f"{param_count} Params Success : {len(answer_list)}"}
+            else:
+                return {"type": False, "msg": f"{param_count} Params Failed : {len(answer_list)}"}
         else:
             cleanup_function(id)
             return {"type": False, "msg": "Push swap test Failed"}

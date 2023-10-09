@@ -2,12 +2,14 @@ from typing import Annotated
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import git
 from pydantic import BaseModel
 import sys
 import os
 import asyncio
 from apscheduler.schedulers.background import BackgroundScheduler
+from starlette.responses import FileResponse
 from datetime import datetime, timedelta
 import shutil
 
@@ -15,6 +17,7 @@ script_path = os.path.join(os.path.dirname(__file__), "scripts")
 sys.path.append(script_path)
 repo_path = os.path.join(os.path.dirname(__file__), "repo")
 sys.path.append(repo_path)
+
 
 from compile_test import (
     test_make,
@@ -36,9 +39,11 @@ app = FastAPI()
 
 scheduler = BackgroundScheduler()
 
+app.mount("/static", StaticFiles(directory="push_swap_visualizer_react/dist"), name="static")
+app.mount("/static", StaticFiles(directory="push_swap_visualizer_react/public"), name="public")
 
 def clean_up_repo(id: str):
-    directory_path = os.path.join(os.path.__file__, "repo", id)
+    directory_path = os.path.join(os.getcwd(), "repo", id)
     try:
         shutil.rmtree(directory_path)
         print(f"{directory_path} 삭제 성공")
@@ -51,14 +56,17 @@ scheduler.start()
 
 
 def update_schedule(id: str, directory: str):
-    print("in update_schedule", id, "directory : ", directory)
-    if id in job_dict:
-        scheduler.remove_job(id)
-        del job_dict[id]
-    start_time = datetime.now() + timedelta(minutes=1)
-    scheduler.add_job(clean_up_repo, "date", [directory], run_date=start_time, id=id)
-    job_dict[id] = True
-    print("job_dict : ", job_dict)
+    print("in update_schedule", id, "directory : ", directory, job_dict)
+    try:
+        if id in job_dict:
+            scheduler.remove_job(id)
+            del job_dict[id]
+        start_time = datetime.now() + timedelta(minutes=1)
+        scheduler.add_job(clean_up_repo, "date", [directory], run_date=start_time, id=id)
+        job_dict[id] = True
+        print("job_dict : ", job_dict)
+    except Exception as e:
+        print('in update_schedule, e : ', e)
 
 
 @app.on_event("startup")
@@ -85,8 +93,9 @@ app.add_middleware(
 
 
 @app.get("/")
-async def get_root(request: Request):
-    return {"good": "bad"}
+async def get_root():
+    html_path = "./push_swap_visualizer_react/dist/index.html"
+    return FileResponse(html_path, media_type="text/html")
 
 
 ws_connections = {}
