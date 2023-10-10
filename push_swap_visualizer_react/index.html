@@ -18,5 +18,16 @@
 	<body>
 		<div id="root"></div>
 		<script type="module" src="/src/main.tsx"></script>
+		<script>
+			// 현재 환경이 개발 모드인지 판별
+			var isDevelopment = process.env.NODE_ENV === 'development';
+			console.log('in index.html , mode : ', process.env.NODE_ENV);
+			// favicon 경로 설정
+			var faviconPath = isDevelopment ? '/PS.svg' : '/static/PS.svg';
+
+			// favicon 요소에 경로 적용
+			var faviconElement = document.getElementById('favicon');
+			faviconElement.href = faviconPath;
+		</script>
 	</body>
 </html>
