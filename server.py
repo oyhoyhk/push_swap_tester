@@ -56,7 +56,6 @@ class RedirectToHomeMiddleware(BaseHTTPMiddleware):
 scheduler = BackgroundScheduler()
 
 app.mount("/static", StaticFiles(directory="push_swap_visualizer_react/dist"), name="static")
-app.mount("/push_swap_", StaticFiles(directory="push_swap_visualizer_react/public"), name="public")
 
 def clean_up_repo(id: str):
     directory_path = os.path.join(os.getcwd(), "repo", id)
