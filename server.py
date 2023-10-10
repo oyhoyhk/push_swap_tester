@@ -40,22 +40,31 @@ from push_swap_test import test_push_swap
 
 app = FastAPI()
 
-#app.add_middleware(
+# app.add_middleware(
 #    Middleware(TrustedHostMiddleware, allowed_hosts=["yourdomain.com"])
-#)
+# )
+
 
 class RedirectToHomeMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
-        if request.url.path not in ("/", "/api", "/static"):
-            return RedirectResponse(url="/")
-        response = await call_next(request)
-        return response
+        if (
+            request.url.path == "/"
+            or request.url.path.startswith("/api/")
+            or request.url.path.startswith("/static/")
+        ):
+            response = await call_next(request)
+            return response
+        return RedirectResponse(url="/")
 
-#app.add_middleware(RedirectToHomeMiddleware)
+
+app.add_middleware(RedirectToHomeMiddleware)
 
 scheduler = BackgroundScheduler()
 
-app.mount("/static", StaticFiles(directory="push_swap_visualizer_react/dist"), name="static")
+app.mount(
+    "/static", StaticFiles(directory="push_swap_visualizer_react/dist"), name="static"
+)
+
 
 def clean_up_repo(id: str):
     directory_path = os.path.join(os.getcwd(), "repo", id)
@@ -77,11 +86,13 @@ def update_schedule(id: str, directory: str):
             scheduler.remove_job(id)
             del job_dict[id]
         start_time = datetime.now() + timedelta(minutes=1)
-        scheduler.add_job(clean_up_repo, "date", [directory], run_date=start_time, id=id)
+        scheduler.add_job(
+            clean_up_repo, "date", [directory], run_date=start_time, id=id
+        )
         job_dict[id] = True
         print("job_dict : ", job_dict)
     except Exception as e:
-        print('in update_schedule, e : ', e)
+        print("in update_schedule, e : ", e)
 
 
 @app.on_event("startup")

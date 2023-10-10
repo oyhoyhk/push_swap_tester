@@ -59,6 +59,8 @@ export interface ITestInfo {
 	api: string;
 	next_api: string;
 	status: string;
+	paramCount?: number;
+	answerCount?: number;
 }
 
 const ProcessContainer = ({ id }: { id: string }) => {
@@ -83,9 +85,9 @@ const ProcessContainer = ({ id }: { id: string }) => {
 			} nextTest : ${nextTest}`
 		);
 		setTasks(
-			tasks.map((task) => ({
+			tasks.map(task => ({
 				...task,
-				list: task.list.map((test) => {
+				list: task.list.map(test => {
 					if (test.name === curTestName) {
 						return { ...test, status: 'running' };
 					} else {
@@ -99,11 +101,11 @@ const ProcessContainer = ({ id }: { id: string }) => {
 		console.log(curTestName, api, response.data);
 		if (response.data.type) {
 			setTasks(
-				tasks.map((task) => ({
+				tasks.map(task => ({
 					...task,
-					list: task.list.map((test) => {
+					list: task.list.map(test => {
 						if (test.name === curTestName) {
-							return { ...test, status: 'success', name: response.data.msg };
+							return { ...test, status: 'success' };
 						} else if (test.name === nextTest) {
 							return { ...test, status: 'running' };
 						} else {
@@ -117,11 +119,11 @@ const ProcessContainer = ({ id }: { id: string }) => {
 			else await axios.get(import.meta.env.VITE_SERVER_URL + '/api/cleanup?id=' + id);
 		} else {
 			setTasks(
-				tasks.map((task) => ({
+				tasks.map(task => ({
 					...task,
-					list: task.list.map((test) => {
+					list: task.list.map(test => {
 						if (test.name === curTestName) {
-							return { ...test, status: 'fail', name: response.data.msg };
+							return { ...test, status: 'fail' };
 						} else {
 							return test;
 						}
@@ -160,7 +162,7 @@ const ProcessContainer = ({ id }: { id: string }) => {
 			<legend>Unit Test Process</legend>
 			<TaskContainer ref={taskContainerRef}>
 				{tasks.map((task, idx) => (
-					<Task key={task['category']} idx={idx} list={task['list']} />
+					<Task key={task['category']} category={task['category']} idx={idx} list={task['list']} />
 				))}
 			</TaskContainer>
 			<Response className={message.type}>{message.msg}</Response>

@@ -41,7 +41,10 @@ def test_make_re_link(id: str):
 
         print(output)
 
-        if "make: Nothing to be done for 'all'." in output:
+        if (
+            "make: Nothing to be done for 'all'." in output
+            or "make: Nothing to be done for `all'." in output
+        ):
             return {"type": True, "msg": "make re-link test Success"}
         else:
             return {"type": False, "msg": "make re-link test Failed"}
