@@ -19,7 +19,7 @@ const App = () => {
 	const [stackA, setStackA] = useState<Deque<number>>(new Deque([]));
 	const [stackB, setStackB] = useState<Deque<number>>(new Deque([]));
 	const [playing, setPlaying] = useState(false);
-	const raqId = useRef<number>(0);
+	const raqId = useRef<NodeJS.Timeout>();
 	const [cmdIdx, setCmdIdx] = useState(0);
 	const [speed, setSpeed] = useState(1);
 	const [commands, setCommands] = useState<string[]>([]);
