@@ -178,13 +178,30 @@ const TestPage = () => {
 	);
 };
 
-const Button= styled.button``
+const Button = styled.button`
+	margin-left: 15px;
+	outline: none;
+	padding: 10px 10px;
+	border-radius: 5px;
+	border: 2px solid gray;
+	background: none;
+	color: gray;
+	cursor: pointer;
+	transition: 0.5s;
+	font-size: 1.1rem;
+	&.active {
+		border: 2px solid white;
+		color: white;
+	}
+`;
 
 const ButtonContainer = styled.div`
-	width:100%;
-	height:40px;	
-`
-
+	width: 570px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+`;
 
 const Container = styled.div`
 	display: flex;
