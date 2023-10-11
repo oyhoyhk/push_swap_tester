@@ -89,29 +89,6 @@ const TestPage = () => {
 		}
 	};
 
-	const clickModifyGithubID = async () => {
-		setStatus({
-			id: {
-				check: true,
-				value: '',
-				fixed: false,
-				loading: false,
-				responseType: 'success',
-				responseMessage: '',
-			},
-			repo: {
-				check: false,
-				value: '',
-				fixed: false,
-				loading: false,
-				responseType: 'success',
-				responseMessage: '',
-			},
-		});
-		await axios.get(import.meta.env.VITE_SERVER_URL + '/api/cleanup?id=' + status['id'].value);
-		setProcessToggle(false);
-	};
-
 	const onBlurRepo = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		console.log('Blur Repo : ', e.target.value);
 		if (e.target.value === '') return;
@@ -168,26 +145,12 @@ const TestPage = () => {
 		}
 	};
 
-	const clickModifyRepo = async () => {
-		setStatus({
-			id: {
-				...status['id'],
-			},
-			repo: {
-				check: true,
-				value: '',
-				fixed: false,
-				loading: false,
-				responseType: 'success',
-				responseMessage: '',
-			},
-		});
-		await axios.get(import.meta.env.VITE_SERVER_URL + '/api/cleanup?id=' + status['id'].value);
-		setProcessToggle(false);
-	};
-
 	return (
 		<Container>
+			<ButtonContainer>
+				<Button>Reset</Button>
+				<Button>Retry</Button>
+			</ButtonContainer>
 			{status['id'].check && (
 				<Fieldset
 					name="id"
@@ -196,7 +159,6 @@ const TestPage = () => {
 					placeholder="Input your github ID"
 					onBlur={onBlurGithubID}
 					onKeyUp={onKeyUpGithubID}
-					onModify={clickModifyGithubID}
 					setStatus={setStatus}
 				/>
 			)}
@@ -208,7 +170,6 @@ const TestPage = () => {
 					placeholder="Input your push_swap repository URL for testing"
 					onBlur={onBlurRepo}
 					onKeyUp={onKeyUpRepo}
-					onModify={clickModifyRepo}
 					setStatus={setStatus}
 				/>
 			)}
@@ -216,6 +177,14 @@ const TestPage = () => {
 		</Container>
 	);
 };
+
+const Button= styled.button``
+
+const ButtonContainer = styled.div`
+	width:100%;
+	height:40px;	
+`
+
 
 const Container = styled.div`
 	display: flex;

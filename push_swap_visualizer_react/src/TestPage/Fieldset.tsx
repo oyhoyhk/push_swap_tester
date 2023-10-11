@@ -3,19 +3,6 @@ import { IStatusContainer } from './TestPage';
 import { useEffect, useRef, useState } from 'react';
 import Loader from './Loader';
 
-const Modal = ({ handleModify }: { handleModify: (value: boolean) => Promise<void> }) => {
-	return (
-		<ModalContainer>
-			<div className="text">Are you sure to modify?</div>
-			<div className="subText">This task may take a few Seconds.</div>
-			<div className="buttonContainer">
-				<button onClick={() => handleModify(true)}>Sure</button>
-				<button onClick={() => handleModify(false)}>Cancel</button>
-			</div>
-		</ModalContainer>
-	);
-};
-
 const Fieldset = ({
 	name,
 	status,
@@ -23,7 +10,6 @@ const Fieldset = ({
 	placeholder,
 	onBlur,
 	onKeyUp,
-	onModify,
 	setStatus,
 }: {
 	name: 'id' | 'repo';
@@ -32,7 +18,6 @@ const Fieldset = ({
 	status: IStatusContainer;
 	onBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-	onModify: () => Promise<void>;
 	setStatus: React.Dispatch<React.SetStateAction<IStatusContainer>>;
 }) => {
 	const containerRef = useRef<HTMLFieldSetElement>(null);
@@ -52,28 +37,6 @@ const Fieldset = ({
 	const clickToModify = () => {
 		if (status[name].fixed) setModal(true);
 	};
-	const handleModify = async (value: boolean) => {
-		if (value) {
-			await onModify();
-			setModal(false);
-			setStatus({
-				id: {
-					...status['id'],
-				},
-				repo: {
-					check: true,
-					value: '',
-					fixed: false,
-					loading: false,
-					responseType: 'success',
-					responseMessage: '',
-				},
-			});
-			if (inputRef.current) inputRef.current.focus();
-		} else {
-			setModal(false);
-		}
-	};
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const name = e.target.name as 'id' | 'repo';
 		setStatus({
@@ -89,73 +52,34 @@ const Fieldset = ({
 		<Container ref={containerRef}>
 			<legend>{legend}</legend>
 			<InnerContainer className={modal ? 'toggle' : ''}>
-				<Wrapper>
-					<input
-						ref={inputRef}
-						name={name}
-						type="text"
-						value={status[name].value}
-						placeholder={placeholder}
-						onBlur={onBlur}
-						onKeyUp={onKeyUp}
-						onClick={clickToModify}
-						onChange={onChange}
-					/>
-					<Message>
-						{status[name].loading ? (
-							<Loader />
-						) : (
-							<div className={status[name].responseType}>{status[name].responseMessage}</div>
-						)}
-					</Message>
-				</Wrapper>
-				<Wrapper>
-					<Modal handleModify={handleModify} />
-				</Wrapper>
+				<input
+					ref={inputRef}
+					name={name}
+					type="text"
+					value={status[name].value}
+					placeholder={placeholder}
+					onBlur={onBlur}
+					onKeyUp={onKeyUp}
+					onClick={clickToModify}
+					onChange={onChange}
+				/>
+				<Message>
+					{status[name].loading ? <Loader /> : <div className={status[name].responseType}>{status[name].responseMessage}</div>}
+				</Message>
 			</InnerContainer>
 		</Container>
 	);
 };
 
-const ModalContainer = styled.div`
+const InnerContainer = styled.div`
 	width: 100%;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	& > .text {
-		font-size: 1.5rem;
-	}
-	& > .subText {
-		font-size: 0.9rem;
-		color: gray;
-	}
-	& > .buttonContainer {
-		margin-top: 15px;
-		& > button {
-			background: none;
-			outline: none;
-			border: 2px solid gray;
-			color: gray;
-			border-radius: 5px;
-			padding: 5px 10px;
-			cursor: pointer;
-			&:first-of-type {
-				margin-right: 20px;
-				border: 2px solid white;
-				color: white;
-			}
-		}
-	}
-`;
-
-const Wrapper = styled.div`
+	transition: 0.5s cubic-bezier(0.17, 0.67, 0.8, 1.12);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
 	height: 112px;
+
 	& > input {
 		width: 90%;
 		height: 40px;
@@ -169,22 +93,40 @@ const Wrapper = styled.div`
 		font-size: 1.25rem;
 		&:focus {
 			border-bottom: 2px solid white;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			& > .text {
+				font-size: 1.5rem;
+			}
+			& > .subText {
+				font-size: 0.9rem;
+				color: gray;
+			}
+			& > .buttonContainer {
+				margin-top: 15px;
+				& > button {
+					background: none;
+					outline: none;
+					border: 2px solid gray;
+					color: gray;
+					border-radius: 5px;
+					padding: 5px 10px;
+					cursor: pointer;
+					&:first-of-type {
+						margin-right: 20px;
+						border: 2px solid white;
+						color: white;
+					}
+				}
+			}
 		}
 		color: white;
 		&.fixed {
 			color: gray;
 			cursor: not-allowed;
 		}
-	}
-`;
-
-const InnerContainer = styled.div`
-	width: 100%;
-	height: 240px;
-	transition: 0.5s cubic-bezier(0.17, 0.67, 0.8, 1.12);
-	transform: translateY(55px);
-	&.toggle {
-		transform: translateY(-65px);
 	}
 `;
 
