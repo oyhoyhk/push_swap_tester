@@ -124,9 +124,9 @@ async def get_root():
     return FileResponse(html_path, media_type="text/html")
 
 
-@app.get("/{path:path}", include_in_schema=False)
-async def redirect_to_root(path: str):
-    return RedirectResponse(url="/", status_code=301)
+# @app.get("/{path:path}", include_in_schema=False)
+# async def redirect_to_root(path: str):
+#     return RedirectResponse(url="/", status_code=301)
 
 
 ws_connections = {}

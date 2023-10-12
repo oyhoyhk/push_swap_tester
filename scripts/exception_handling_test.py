@@ -17,13 +17,21 @@ def test_no_param(id: str):
         )
 
         if len(result.stdout) == 0:
-            return {"type": True, "msg": "No param test Success"}
+            return {
+                "type": True,
+                "msg": "No param test Success",
+                "stdout": result.stdout,
+            }
         else:
-            return {"type": False, "msg": "No Param test Failed"}
+            return {
+                "type": False,
+                "msg": "No Param test Failed",
+                "stdout": result.stdout,
+            }
     except FileNotFoundError:
-        return {"type": False, "msg": "No param test Failed"}
+        return {"type": False, "msg": "No param test Failed", "stdout": result.stderr}
     except Exception as e:
-        return {"type": False, "msg": "No param test Failed"}
+        return {"type": False, "msg": "No param test Failed", "stdout": result.stderr}
     finally:
         os.chdir(original_directory)
 
@@ -51,12 +59,28 @@ def test_invalid_params(id: str):
                 text=True,
             )
             if result.stdout != "Error\n":
-                return {"type": False, "msg": "Invalid params test Failed"}
-        return {"type": True, "msg": "Invalid params test Success"}
+                return {
+                    "type": False,
+                    "msg": "Invalid params test Failed",
+                    "stdout": result.stdout,
+                }
+        return {
+            "type": True,
+            "msg": "Invalid params test Success",
+            "stdout": result.stdout,
+        }
     except FileNotFoundError:
-        return {"type": False, "msg": "Invalid params test Failed"}
+        return {
+            "type": False,
+            "msg": "Invalid params test Failed",
+            "stdout": result.stderr,
+        }
     except Exception as e:
-        return {"type": False, "msg": "Invalid params test Failed"}
+        return {
+            "type": False,
+            "msg": "Invalid params test Failed",
+            "stdout": result.stderr,
+        }
     finally:
         os.chdir(original_directory)
 
@@ -84,11 +108,27 @@ def test_param_duplication(id: str):
                 text=True,
             )
             if result.stdout != "Error\n":
-                return {"type": False, "msg": "Duplicated params test Failed"}
-        return {"type": True, "msg": "Duplicated params test Success"}
+                return {
+                    "type": False,
+                    "msg": "Duplicated params test Failed",
+                    "stdout": result.stdout,
+                }
+        return {
+            "type": True,
+            "msg": "Duplicated params test Success",
+            "stdout": result.stdout,
+        }
     except FileNotFoundError:
-        return {"type": False, "msg": "Duplicated params test Failed"}
+        return {
+            "type": False,
+            "msg": "Duplicated params test Failed",
+            "stdout": result.stderr,
+        }
     except Exception as e:
-        return {"type": False, "msg": "Duplicated params test Failed"}
+        return {
+            "type": False,
+            "msg": "Duplicated params test Failed",
+            "stdout": result.stderr,
+        }
     finally:
         os.chdir(original_directory)

@@ -114,25 +114,34 @@ def test_push_swap(id: str, param_count: int):
                 return {
                     "type": True,
                     "msg": f"{param_count} Params Success : {len(answer_list)}",
-                    "param_count": param_count,
-                    "answer_count": len(answer_list),
+                    "params": origin_list,
+                    "answers": answer_list,
                 }
             else:
                 return {
                     "type": False,
                     "msg": f"{param_count} Params Failed : {len(answer_list)}",
-                    "param_count": param_count,
-                    "answer_count": len(answer_list),
+                    "parmas": origin_list,
+                    "answers": answer_list,
                 }
         else:
             cleanup_function(id)
-            return {"type": False, "msg": "Push swap test Failed"}
+            return {
+                "type": False,
+                "msg": "Push swap test Failed",
+                "params": origin_list,
+                "answers": answer_list,
+            }
     except FileNotFoundError:
         cleanup_function(id)
-        return {"type": False, "msg": "Push swap test Failed"}
+        return {
+            "type": False,
+            "msg": "Push swap test Failed",
+            "stdout": "Cannot find push_swap",
+        }
     except Exception as e:
         print(e)
         cleanup_function(id)
-        return {"type": False, "msg": "Push swap test Failed"}
+        return {"type": False, "msg": "Push swap test Failed", "stdout": result.stderr}
     finally:
         os.chdir(original_directory)

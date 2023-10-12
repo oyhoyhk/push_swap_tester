@@ -3,33 +3,39 @@
 	"tasks": [
 		{
 			"category": "Compile Test",
+			"tab": "Compile",
 			"list": [
 				{
 					"name": "make Test",
+					"tab": "make",
 					"api": "/api/make_test?id=",
 					"next_api": "/api/make_re_link_test?id=",
 					"status": "pending"
 				},
 				{
 					"name": "make re-link Test",
+					"tab": "re-link",
 					"api": "/api/make_re_link_test?id=",
 					"next_api": "/api/make_re_test?id=",
 					"status": "pending"
 				},
 				{
 					"name": "make re Test",
+					"tab": "make re",
 					"api": "/api/make_re_test?id=",
 					"next_api": "/api/make_clean_test?id=",
 					"status": "pending"
 				},
 				{
 					"name": "make clean Test",
+					"tab": "clean",
 					"api": "/api/make_clean_test?id=",
 					"next_api": "/api/make_fclean_test?id=",
 					"status": "pending"
 				},
 				{
 					"name": "make fclean Test",
+					"tab": "fclean",
 					"api": "/api/make_fclean_test?id=",
 					"next_api": "/api/no_param_test?id=",
 					"status": "pending"
@@ -38,21 +44,25 @@
 		},
 		{
 			"category": "Exception Handling Test",
+			"tab": "Exception",
 			"list": [
 				{
 					"name": "No Param Test",
+					"tab": "No Param",
 					"api": "/api/no_param_test?id=",
 					"next_api": "/api/invalid_params_test?id=",
 					"status": "pending"
 				},
 				{
 					"name": "Invalid Params Test",
+					"tab": "Invalid Params",
 					"api": "/api/invalid_params_test?id=",
 					"next_api": "/api/duplicated_params_test?id=",
 					"status": "pending"
 				},
 				{
 					"name": "Duplicated Params Test",
+					"tab": "Dup Params",
 					"api": "/api/duplicated_params_test?id=",
 					"next_api": "/api/push_swap_test?param_count=3&id=",
 					"status": "pending"
@@ -61,9 +71,11 @@
 		},
 		{
 			"category": "3 Params Test",
+			"tab": "3 Params",
 			"list": [
 				{
 					"name": "3 Params Test 1",
+					"tab": "Test 1",
 					"api": "/api/push_swap_test?param_count=3&id=",
 					"next_api": "/api/push_swap_test?param_count=3&id=",
 					"status": "pending",
@@ -72,6 +84,7 @@
 				},
 				{
 					"name": "3 Params Test 2",
+					"tab": "Test 2",
 					"api": "/api/push_swap_test?param_count=3&id=",
 					"next_api": "/api/push_swap_test?param_count=3&id=",
 					"status": "pending",
@@ -80,6 +93,7 @@
 				},
 				{
 					"name": "3 Params Test 3",
+					"tab": "Test 3",
 					"api": "/api/push_swap_test?param_count=3&id=",
 					"next_api": "/api/push_swap_test?param_count=3&id=",
 					"status": "pending",
@@ -88,6 +102,7 @@
 				},
 				{
 					"name": "3 Params Test 4",
+					"tab": "Test 4",
 					"api": "/api/push_swap_test?param_count=3&id=",
 					"next_api": "/api/push_swap_test?param_count=3&id=",
 					"status": "pending",
@@ -96,6 +111,7 @@
 				},
 				{
 					"name": "3 Params Test 5",
+					"tab": "Test 5",
 					"api": "/api/push_swap_test?param_count=3&id=",
 					"next_api": "/api/push_swap_test?param_count=5&id=",
 					"status": "pending",
@@ -106,9 +122,11 @@
 		},
 		{
 			"category": "5 Params Test",
+			"tab": "5 Params",
 			"list": [
 				{
 					"name": "5 Params Test 1",
+					"tab": "Test 1",
 					"api": "/api/push_swap_test?param_count=5&id=",
 					"next_api": "/api/push_swap_test?param_count=5&id=",
 					"status": "pending",
@@ -117,6 +135,7 @@
 				},
 				{
 					"name": "5 Params Test 2",
+					"tab": "Test 2",
 					"api": "/api/push_swap_test?param_count=5&id=",
 					"next_api": "/api/push_swap_test?param_count=5&id=",
 					"status": "pending",
@@ -125,6 +144,7 @@
 				},
 				{
 					"name": "5 Params Test 3",
+					"tab": "Test 3",
 					"api": "/api/push_swap_test?param_count=5&id=",
 					"next_api": "/api/push_swap_test?param_count=5&id=",
 					"status": "pending",
@@ -133,6 +153,7 @@
 				},
 				{
 					"name": "5 Params Test 4",
+					"tab": "Test 4",
 					"api": "/api/push_swap_test?param_count=5&id=",
 					"next_api": "/api/push_swap_test?param_count=5&id=",
 					"status": "pending",
@@ -141,6 +162,7 @@
 				},
 				{
 					"name": "5 Params Test 5",
+					"tab": "Test 5",
 					"api": "/api/push_swap_test?param_count=5&id=",
 					"next_api": "/api/push_swap_test?param_count=100&id=",
 					"status": "pending",
@@ -151,9 +173,11 @@
 		},
 		{
 			"category": "100 Params Test",
+			"tab": "100 Params",
 			"list": [
 				{
 					"name": "100 Params Test 1",
+					"tab": "Test 1",
 					"api": "/api/push_swap_test?param_count=100&id=",
 					"next_api": "/api/push_swap_test?param_count=100&id=",
 					"status": "pending",
@@ -162,6 +186,7 @@
 				},
 				{
 					"name": "100 Params Test 2",
+					"tab": "Test 2",
 					"api": "/api/push_swap_test?param_count=100&id=",
 					"next_api": "/api/push_swap_test?param_count=100&id=",
 					"status": "pending",
@@ -170,6 +195,7 @@
 				},
 				{
 					"name": "100 Params Test 3",
+					"tab": "Test 3",
 					"api": "/api/push_swap_test?param_count=100&id=",
 					"next_api": "/api/push_swap_test?param_count=100&id=",
 					"status": "pending",
@@ -178,6 +204,7 @@
 				},
 				{
 					"name": "100 Params Test 4",
+					"tab": "Test 4",
 					"api": "/api/push_swap_test?param_count=100&id=",
 					"next_api": "/api/push_swap_test?param_count=100&id=",
 					"status": "pending",
@@ -186,6 +213,7 @@
 				},
 				{
 					"name": "100 Params Test 5",
+					"tab": "Test 5",
 					"api": "/api/push_swap_test?param_count=100&id=",
 					"next_api": "/api/push_swap_test?param_count=500&id=",
 					"status": "pending",
@@ -196,9 +224,11 @@
 		},
 		{
 			"category": "500 Params Test",
+			"tab": "500 Params",
 			"list": [
 				{
 					"name": "500 Params Test 1",
+					"tab": "Test 1",
 					"api": "/api/push_swap_test?param_count=500&id=",
 					"next_api": "/api/push_swap_test?param_count=500&id=",
 					"status": "pending",
@@ -207,6 +237,7 @@
 				},
 				{
 					"name": "500 Params Test 2",
+					"tab": "Test 2",
 					"api": "/api/push_swap_test?param_count=500&id=",
 					"next_api": "/api/push_swap_test?param_count=500&id=",
 					"status": "pending",
@@ -215,6 +246,7 @@
 				},
 				{
 					"name": "500 Params Test 3",
+					"tab": "Test 3",
 					"api": "/api/push_swap_test?param_count=500&id=",
 					"next_api": "/api/push_swap_test?param_count=500&id=",
 					"status": "pending",
@@ -223,6 +255,7 @@
 				},
 				{
 					"name": "500 Params Test 4",
+					"tab": "Test 4",
 					"api": "/api/push_swap_test?param_count=500&id=",
 					"next_api": "/api/push_swap_test?param_count=500&id=",
 					"status": "pending",
@@ -231,6 +264,7 @@
 				},
 				{
 					"name": "500 Params Test 5",
+					"tab": "Test 5",
 					"api": "/api/push_swap_test?param_count=500&id=",
 					"next_api": "",
 					"status": "pending",

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import Task from './Task';
 import taskData from '../Tasks.json';
 import axios from 'axios';
+import Response from './Response';
 
 /*
   Mandetory test 목록
@@ -59,14 +60,31 @@ export interface ITestInfo {
 	api: string;
 	next_api: string;
 	status: string;
-	paramCount?: number;
-	answerCount?: number;
+	stdout?: string;
+	params?: number[];
+	answers?: string[];
+}
+
+export interface ITask {
+	category: string;
+	tab: 'string';
+	list: {
+		name: string;
+		tab: string;
+		api: string;
+		next_api: string;
+		status: string;
+		stdout?: string;
+		params?: number[];
+		answers?: string[];
+	}[];
 }
 
 const ProcessContainer = ({ id }: { id: string }) => {
-	const [tasks, setTasks] = useState(taskData['tasks']);
+	const origin = taskData['tasks'] as ITask[];
+	const [tasks, setTasks] = useState<ITask[]>(origin);
 
-	const containerRef = useRef<HTMLFieldSetElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
 	const taskContainerRef = useRef<HTMLDivElement>(null);
 	const [currentTest, setCurrentTest] = useState(taskData['start']);
 	const executedTestList = useRef<string[]>([]);
@@ -105,7 +123,13 @@ const ProcessContainer = ({ id }: { id: string }) => {
 					...task,
 					list: task.list.map(test => {
 						if (test.name === curTestName) {
-							return { ...test, status: 'success' };
+							return {
+								...test,
+								status: 'success',
+								stdout: response.data.stdout,
+								params: response.data.params,
+								answers: response.data.answers,
+							};
 						} else if (test.name === nextTest) {
 							return { ...test, status: 'running' };
 						} else {
@@ -123,7 +147,13 @@ const ProcessContainer = ({ id }: { id: string }) => {
 					...task,
 					list: task.list.map(test => {
 						if (test.name === curTestName) {
-							return { ...test, status: 'fail' };
+							return {
+								...test,
+								status: 'fail',
+								stdout: response.data.stdout,
+								params: response.data.params,
+								answers: response.data.answers,
+							};
 						} else {
 							return test;
 						}
@@ -158,19 +188,24 @@ const ProcessContainer = ({ id }: { id: string }) => {
 		}
 	}, [currentTest]);
 	return (
-		<Container ref={containerRef}>
-			<legend>Unit Test Process</legend>
-			<TaskContainer ref={taskContainerRef}>
-				{tasks.map((task, idx) => (
-					<Task key={task['category']} category={task['category']} idx={idx} list={task['list']} />
-				))}
-			</TaskContainer>
-			<Response className={message.type}>{message.msg}</Response>
-		</Container>
+		<Wrapper ref={containerRef}>
+			<Container>
+				<legend>Unit Test Process</legend>
+				<TaskContainer ref={taskContainerRef}>
+					{tasks.map((task, idx) => (
+						<Task key={task['category']} category={task['category']} idx={idx} list={task['list']} />
+					))}
+				</TaskContainer>
+				<ResponseMessage className={message.type}>{message.msg}</ResponseMessage>
+			</Container>
+			<Response tasks={tasks} />
+		</Wrapper>
 	);
 };
 
-const Response = styled.div`
+const ResponseMessage = styled.div`
+	margin-top: 10px;
+	margin-bottom: 20px;
 	&.running {
 		color: #fd9b12;
 	}
@@ -184,7 +219,7 @@ const Response = styled.div`
 
 const TaskContainer = styled.div`
 	width: 90%;
-	height: 100px;
+	height: 80px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -212,6 +247,10 @@ const Container = styled.fieldset`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+`;
+
+const Wrapper = styled.div`
+	width: 570px;
 	opacity: 0;
 	transition: 0.5s;
 	transform: translateY(100px);

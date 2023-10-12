@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import Fieldset from './Fieldset';
 import ProcessContainer from './ProcessContainer';
+import Response from './Response';
 
 export interface IStatus {
 	check: boolean;
@@ -90,7 +91,6 @@ const TestPage = () => {
 	};
 
 	const onBlurRepo = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		console.log('Blur Repo : ', e.target.value);
 		if (e.target.value === '') return;
 		setStatus({
 			id: { ...status['id'] },
@@ -139,7 +139,6 @@ const TestPage = () => {
 	};
 
 	const onKeyUpRepo = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		console.log('KeyUp Repo');
 		if (e.key === 'Enter') {
 			e.currentTarget.blur();
 		}
