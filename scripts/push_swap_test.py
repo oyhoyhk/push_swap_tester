@@ -114,7 +114,7 @@ def test_push_swap(id: str, param_count: int):
                 return {
                     "type": True,
                     "msg": f"{param_count} Params Success : {len(answer_list)}",
-                    "params": origin_list,
+                    "git": origin_list,
                     "answers": answer_list,
                 }
             else:
