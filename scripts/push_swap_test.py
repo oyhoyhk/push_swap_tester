@@ -11,6 +11,8 @@ def create_test_case(param_count: int, min_val=1):
         if not num in unique_integers:
             unique_integers.append(num)
 
+    if checker(unique_integers):
+        unique_integers = create_test_case(param_count, min_val=1)
     return list(unique_integers)
 
 
@@ -113,22 +115,22 @@ def test_push_swap(id: str, param_count: int):
             if len(answer_list) <= max_count[param_count]:
                 return {
                     "type": True,
-                    "msg": f"{param_count} Params Success : {len(answer_list)}",
-                    "git": origin_list,
+                    "stdout": f"{param_count} Params Success : {len(answer_list)}",
+                    "params": origin_list,
                     "answers": answer_list,
                 }
             else:
                 return {
                     "type": False,
-                    "msg": f"{param_count} Params Failed : {len(answer_list)}",
-                    "parmas": origin_list,
+                    "stdout": f"{param_count} Params Failed : {len(answer_list)}",
+                    "params": origin_list,
                     "answers": answer_list,
                 }
         else:
             cleanup_function(id)
             return {
                 "type": False,
-                "msg": "Push swap test Failed",
+                "stdout": "Push swap test Failed",
                 "params": origin_list,
                 "answers": answer_list,
             }
@@ -136,12 +138,11 @@ def test_push_swap(id: str, param_count: int):
         cleanup_function(id)
         return {
             "type": False,
-            "msg": "Push swap test Failed",
             "stdout": "Cannot find push_swap",
         }
     except Exception as e:
         print(e)
         cleanup_function(id)
-        return {"type": False, "msg": "Push swap test Failed", "stdout": result.stderr}
+        return {"type": False, "stdout": result.stderr}
     finally:
         os.chdir(original_directory)

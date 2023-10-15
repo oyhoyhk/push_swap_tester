@@ -1,13 +1,16 @@
 :root {
-  margin: 0;
-  padding: 0;
-  background: #343434;
-  color: white;
-  font-family: "Oswald", sans-serif;
-  overflow-x:hidden;
+	margin: 0;
+	padding: 0;
+	background: #343434;
+	color: white;
+	font-family: 'Oswald', sans-serif;
+	overflow-x: hidden;
+}
+* {
+	user-select: none;
 }
 
 a {
-  text-decoration:none;
-  color:white;
+	text-decoration: none;
+	color: white;
 }

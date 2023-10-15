@@ -21,7 +21,7 @@ def test_make(id: str):
             raise Exception("There is no push_swap!")
 
         print("make test", result.stdout)
-        return {"type": True, "msg": "make test Success", "stdout": result.stdout}
+        return {"type": True, "msg": "make test Success", "stdout": "make test success"}
     except Exception as e:
         print("invalid Path", e)
         return {"type": False, "msg": "make test Failed", "stdout": result.stderr}
@@ -47,23 +47,14 @@ def test_make_re_link(id: str):
             "make: Nothing to be done for 'all'." in output
             or "make: Nothing to be done for `all'." in output
         ):
-            return {
-                "type": True,
-                "msg": "make re-link test Success",
-                "stdout": result.stdout,
-            }
+            return {"type": True, "stdout": "make re-link test Success"}
         else:
-            return {
-                "type": False,
-                "msg": "make re-link test Failed",
-                "stdout": result.stdout,
-            }
+            return {"type": False, "stdout": "make re-link test Failed"}
     except Exception as e:
         print("invalid Path", e)
         return {
             "type": False,
-            "msg": "make re-link test Failed",
-            "stdout": result.stderr,
+            "stdout": "make re-link test Failed",
         }
     finally:
         os.chdir(original_directory)
@@ -81,10 +72,10 @@ def test_make_re(id: str):
 
         if not os.path.exists("push_swap"):
             raise Exception("There is no push_swap!")
-        return {"type": True, "msg": "Make Test Success", "stdout": result.stdout}
+        return {"type": True, "stdout": "make re Test Success"}
     except Exception as e:
         print("invalid Path", e)
-        return {"type": False, "msg": "make re test failed", "stdout": result.stderr}
+        return {"type": False, "stdout": result.stderr}
     finally:
         os.chdir(original_directory)
 
@@ -103,17 +94,16 @@ def test_make_clean(id: str):
                 if file.endswith(".o"):
                     return {
                         "type": False,
-                        "msg": "make clean test Failed",
-                        "stdout": f"{root}/{dir}/{file} exists!",
+                        "stdout": "make clean test Failed",
                     }
 
         subprocess.run(
             ["make"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
-        return {"type": True, "msg": "make clean test Success", "stdout": result.stdout}
+        return {"type": True, "stdout": "make clean test Success"}
     except Exception as e:
         print("invalid Path", e)
-        return {"type": False, "msg": "make clean test Failed", "stdout": result.stderr}
+        return {"type": False, "stdout": "make clean test Failed"}
     finally:
         os.chdir(original_directory)
 
@@ -135,16 +125,15 @@ def test_make_fclean(id: str):
                 if file.endswith(".o") or file == "push_swap":
                     return {
                         "type": False,
-                        "msg": "make fclean test Failed",
-                        "stdout": f"{root}/{dirs}/{file} exists!",
+                        "stdout": "make fclean test Failed",
                     }
 
         subprocess.run(
             ["make"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
-        return {"type": True, "msg": "make clean test Success", "stdout": result.stdout}
+        return {"type": True, "stdout": "make fclean test Success"}
     except Exception as e:
         print("invalid Path", e)
-        return {"type": False, "msg": "make clean test Failed", "stdout": result.stderr}
+        return {"type": False, "stdout": "make fclean test Failed"}
     finally:
         os.chdir(original_directory)
