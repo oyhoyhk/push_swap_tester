@@ -278,8 +278,9 @@ async def duplicated_params_test(id: str):
 
 
 @app.get("/api/push_swap_test")
-async def push_swap_test(id: str, param_count: int):
+async def push_swap_test(id: str, param_count: int, country: str):
     result = test_push_swap(id, param_count)
+    print(f"id : {id} country : {country}")
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)

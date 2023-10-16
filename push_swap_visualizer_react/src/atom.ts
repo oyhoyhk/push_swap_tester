@@ -5,3 +5,8 @@ export const modalInfoState = atom<IModalInfo | null>({
 	key: 'modalInfoState',
 	default: null,
 });
+
+export const countryInfoState = atom<string>({
+	key: 'countryState',
+	default: '',
+});

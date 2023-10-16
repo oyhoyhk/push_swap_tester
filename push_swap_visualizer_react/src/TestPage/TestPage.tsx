@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { countryInfoState } from '../atom';
 import Fieldset from './Fieldset';
-import ProcessContainer from './ProcessContainer';
-import Response from './Response';
 import TaskModal from './TaskModal';
+import ProcessContainer from './ProcessContainer';
 
 export interface IStatus {
 	check: boolean;
@@ -23,6 +24,7 @@ export interface IStatusContainer {
 const TestPage = () => {
 	const rootRef = useRef<HTMLDivElement>(null);
 
+	const setCountryInfo = useSetRecoilState(countryInfoState);
 	const [processToggle, setProcessToggle] = useState(false);
 	const [status, setStatus] = useState<IStatusContainer>({
 		id: {
@@ -146,6 +148,25 @@ const TestPage = () => {
 			e.currentTarget.blur();
 		}
 	};
+
+	useEffect(() => {
+		async function getClientIP() {
+			try {
+				const result = await axios.get('https://geo.ipify.org/api/v2/country?apiKey=at_dkrcX9VN41JyLEodDiSMDLKRim0JA');
+				console.log(result);
+				const country = result.data.location.country;
+				localStorage.setItem('country', country);
+				setCountryInfo(country);
+			} catch (e) {
+				console.error('geo.ipify error', e);
+			}
+		}
+		if (localStorage.getItem('country')) {
+			setCountryInfo(localStorage.getItem('country') as string);
+		} else {
+			getClientIP();
+		}
+	}, []);
 
 	return (
 		<Container ref={rootRef}>

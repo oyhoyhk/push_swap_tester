@@ -15,16 +15,16 @@ def test_make(id: str):
         if result.returncode != 0:
             error_message = result.stderr
             print("Make Error Occurred", error_message)
-            raise Exception("Make Compile Failed")
+            return {"type": False, "stdout": error_message}
 
         if not os.path.exists("push_swap"):
             raise Exception("There is no push_swap!")
 
         print("make test", result.stdout)
-        return {"type": True, "msg": "make test Success", "stdout": "make test success"}
+        return {"type": True, "stdout": "make test success"}
     except Exception as e:
         print("invalid Path", e)
-        return {"type": False, "msg": "make test Failed", "stdout": result.stderr}
+        return {"type": False, "stdout": str(e)}
     finally:
         os.chdir(original_directory)
 

@@ -4,6 +4,8 @@ import Task from './Task';
 import taskData from '../Tasks.json';
 import axios from 'axios';
 import Response from './Response';
+import { useRecoilValue } from 'recoil';
+import { countryInfoState } from '../atom';
 
 /*
   Mandetory test 목록
@@ -26,8 +28,8 @@ export type TaskInfo = {
 function convertTask(): Map<string, TaskInfo> {
 	const taskList: Map<string, TaskInfo> = new Map();
 	const categories = taskData.tasks;
-	categories.forEach((category) => {
-		category.list.forEach((test) => {
+	categories.forEach(category => {
+		category.list.forEach(test => {
 			taskList.set(test['name'], { state: 'pending' });
 		});
 	});
@@ -99,6 +101,7 @@ export interface ITask {
 }
 
 const ProcessContainer = ({ id }: { id: string }) => {
+	const country = useRecoilValue(countryInfoState);
 	const origin = taskData['tasks'] as ITask[];
 	const [tasks, setTasks] = useState<ITask[]>(origin);
 	const [list, setList] = useState<Map<string, TaskInfo>>(convertTask());
@@ -123,9 +126,9 @@ const ProcessContainer = ({ id }: { id: string }) => {
 			} nextTest : ${nextTest}`
 		);
 		setTasks(
-			tasks.map((task) => ({
+			tasks.map(task => ({
 				...task,
-				list: task.list.map((test) => {
+				list: task.list.map(test => {
 					if (test.name === curTestName) {
 						return { ...test, status: 'running' };
 					} else {
@@ -135,13 +138,13 @@ const ProcessContainer = ({ id }: { id: string }) => {
 			}))
 		);
 		setMessage({ type: 'running', msg: `Running ${curTestName}` });
-		const response = await axios.get(import.meta.env.VITE_SERVER_URL + api + id);
+		const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}${api}${id}&country=${country}`);
 		console.log(curTestName, api, response.data);
 		if (response.data.type) {
 			setTasks(
-				tasks.map((task) => ({
+				tasks.map(task => ({
 					...task,
-					list: task.list.map((test) => {
+					list: task.list.map(test => {
 						if (test.name === curTestName) {
 							const temp = new Map(list);
 							const target = temp.get(test.name) as TaskInfo;
@@ -180,9 +183,9 @@ const ProcessContainer = ({ id }: { id: string }) => {
 			else await axios.get(import.meta.env.VITE_SERVER_URL + '/api/cleanup?id=' + id);
 		} else {
 			setTasks(
-				tasks.map((task) => ({
+				tasks.map(task => ({
 					...task,
-					list: task.list.map((test) => {
+					list: task.list.map(test => {
 						if (test.name === curTestName) {
 							const temp = new Map(list);
 							const target = temp.get(test.name) as TaskInfo;
