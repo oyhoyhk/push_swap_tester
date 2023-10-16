@@ -26,8 +26,8 @@ export type TaskInfo = {
 function convertTask(): Map<string, TaskInfo> {
 	const taskList: Map<string, TaskInfo> = new Map();
 	const categories = taskData.tasks;
-	categories.forEach(category => {
-		category.list.forEach(test => {
+	categories.forEach((category) => {
+		category.list.forEach((test) => {
 			taskList.set(test['name'], { state: 'pending' });
 		});
 	});
@@ -123,9 +123,9 @@ const ProcessContainer = ({ id }: { id: string }) => {
 			} nextTest : ${nextTest}`
 		);
 		setTasks(
-			tasks.map(task => ({
+			tasks.map((task) => ({
 				...task,
-				list: task.list.map(test => {
+				list: task.list.map((test) => {
 					if (test.name === curTestName) {
 						return { ...test, status: 'running' };
 					} else {
@@ -139,9 +139,9 @@ const ProcessContainer = ({ id }: { id: string }) => {
 		console.log(curTestName, api, response.data);
 		if (response.data.type) {
 			setTasks(
-				tasks.map(task => ({
+				tasks.map((task) => ({
 					...task,
-					list: task.list.map(test => {
+					list: task.list.map((test) => {
 						if (test.name === curTestName) {
 							const temp = new Map(list);
 							const target = temp.get(test.name) as TaskInfo;
@@ -180,9 +180,9 @@ const ProcessContainer = ({ id }: { id: string }) => {
 			else await axios.get(import.meta.env.VITE_SERVER_URL + '/api/cleanup?id=' + id);
 		} else {
 			setTasks(
-				tasks.map(task => ({
+				tasks.map((task) => ({
 					...task,
-					list: task.list.map(test => {
+					list: task.list.map((test) => {
 						if (test.name === curTestName) {
 							const temp = new Map(list);
 							const target = temp.get(test.name) as TaskInfo;
@@ -260,6 +260,7 @@ const ProcessContainer = ({ id }: { id: string }) => {
 const ResponseMessage = styled.div`
 	margin-top: 10px;
 	margin-bottom: 20px;
+	height: 25px;
 	&.running {
 		color: #fd9b12;
 	}

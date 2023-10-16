@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import { TaskInfo } from './ProcessContainer';
 
 const list: string[] = [];
+const TEST_WIDTH = 135;
+const TEST_MARGIN = 10;
 
-taskList.tasks.forEach(target => {
-	target.list.forEach(task => {
+taskList.tasks.forEach((target) => {
+	target.list.forEach((task) => {
 		list.push(task.name);
 	});
 });
@@ -37,16 +39,20 @@ const Response = ({
 	useEffect(() => {
 		const onWheel = (e: WheelEvent) => {
 			e.preventDefault();
+			const target = e.target as HTMLDivElement;
+			for (const node of target.children) {
+				console.log(node.getBoundingClientRect().width);
+			}
 			if (e.deltaY > 0) {
 				if (cur === 0) return;
-				const width = innerRef.current?.children[cur - 1].getBoundingClientRect().width || 0;
 				setCur(cur - 1);
-				setPos(Math.max(0, pos - width - 15));
+				setPos(Math.max(0, pos - TEST_WIDTH - TEST_MARGIN));
 			} else if (e.deltaY < 0) {
 				if (cur === list.size - 1) return;
-				const width = innerRef.current?.children[cur].getBoundingClientRect().width || 0;
 				setCur(cur + 1);
-				setPos(Math.min(pos + width + 15, widthRef.current - 570));
+				const totalWidth = (TEST_WIDTH + TEST_MARGIN) * list.size - TEST_MARGIN;
+				console.log(totalWidth);
+				setPos(Math.min(pos + TEST_WIDTH + TEST_MARGIN, totalWidth - 570));
 			}
 		};
 		const conRefTarget = conRef.current || null;
@@ -56,11 +62,21 @@ const Response = ({
 		};
 	});
 
+	const clickCopyParams = async (type: 'params' | 'answers') => {
+		const target = list.get(selected)?.[type]?.join(type === 'params' ? ' ' : '\n') || '';
+		try {
+			await navigator.clipboard.writeText(target);
+			console.log('copy success', target);
+		} catch (e) {
+			console.error('copy failed', e);
+		}
+	};
+
 	useEffect(() => {
 		if (innerRef.current) {
 			let width = 0;
-			Array.from(innerRef.current.children).forEach(node => {
-				width += node.getBoundingClientRect().width - 10;
+			Array.from(innerRef.current.children).forEach(() => {
+				width += TEST_WIDTH + TEST_MARGIN;
 			});
 			//  width += innerRef.current.children.length * 15;
 			widthRef.current = width;
@@ -83,13 +99,13 @@ const Response = ({
 				{list.get(selected)?.params && (
 					<CopyComponent>
 						<div>Copy Input Params</div>
-						<button>COPY</button>
+						<button onClick={() => clickCopyParams('params')}>COPY</button>
 					</CopyComponent>
 				)}
 				{list.get(selected)?.answers && (
 					<CopyComponent>
 						<div>Copy Your Commands</div>
-						<button>COPY</button>
+						<button onClick={() => clickCopyParams('answers')}>COPY</button>
 					</CopyComponent>
 				)}
 			</ResultArea>
@@ -108,6 +124,7 @@ const CopyComponent = styled.div`
 		color: white;
 		border-radius: 5px;
 		background: transparent;
+		padding: 5px 10px;
 		cursor: pointer;
 		transition: 0.5s;
 		&:hover {
@@ -131,10 +148,15 @@ const TestList = styled.div<{ pos: number }>`
 	& > div {
 		box-sizing: border-box;
 		display: inline-block;
+		width: ${TEST_WIDTH}px;
+		text-align: center;
 		padding: 5px 10px;
 		border-radius: 10px;
 		border: 2px solid white;
-		margin-right: 15px;
+		margin-right: ${TEST_MARGIN}px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 		transition: 0.5s;
 		&.pending {
 			color: gray;
