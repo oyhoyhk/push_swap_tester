@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 import git
 from pydantic import BaseModel
 import sys
+import math
 import os
 import asyncio
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -17,17 +18,10 @@ from datetime import datetime, timedelta
 import shutil
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
+from sql_app.models import Record
+from sql_app.sqlite_base import db_session
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()
 
 script_path = os.path.join(os.path.dirname(__file__), "scripts")
 sys.path.append(script_path)
@@ -50,6 +44,8 @@ from exception_handling_test import (
 )
 
 from push_swap_test import test_push_swap
+
+count_dict = {}
 
 app = FastAPI()
 
@@ -290,13 +286,44 @@ async def duplicated_params_test(id: str):
     return result
 
 
+def add_record(id, country, param_count, answer_count):
+    record = Record(id, country, param_count, answer_count)
+    db_session.add(record)
+    db_session.commit()
+
+
 @app.get("/api/push_swap_test")
 async def push_swap_test(id: str, param_count: int, country: str):
     result = test_push_swap(id, param_count)
     print(f"id : {id} country : {country}")
+    
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
+        return result
+    
+    if not id in count_dict:
+        count_dict[id] = {}
+    if not param_count in count_dict[id]:
+        count_dict[id][param_count] = {
+            'count' : 0,
+            'answers' : 0,
+        }
+    count_dict[id][param_count]['count'] += 1
+    count_dict[id][param_count]['answers'] += len(result['answers'])
+
+    print(count_dict)
+
+    for id, id_dict in count_dict.items():
+        print('id : ', id)
+        for param, param_result in id_dict.items():
+            print('---- param : ', param)
+            print('---- count : ', param_result['count'])
+            print('---- answers : ', param_result['answers'])
+    
+    if count_dict[id][param_count]['count'] == 5:
+        avg = math.ceil(count_dict[id][param_count]['answers'] / 5)
+        add_record(id, country, param_count, avg)
     return result
 
 
