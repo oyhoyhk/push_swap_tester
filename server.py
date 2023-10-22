@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Depends, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -16,17 +16,25 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.responses import FileResponse, RedirectResponse
 from datetime import datetime, timedelta
 import shutil
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
-from sql_app.models import Record
-from sql_app.sqlite_base import db_session
+from sql_app import crud, models, schemas
+from sql_app.database import SessionLocal, engine
 
 
 script_path = os.path.join(os.path.dirname(__file__), "scripts")
 sys.path.append(script_path)
 repo_path = os.path.join(os.path.dirname(__file__), "repo")
 sys.path.append(repo_path)
+
+models.Base.metadata.create_all(bind=engine)
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 from compile_test import (
@@ -293,37 +301,47 @@ def add_record(id, country, param_count, answer_count):
 
 
 @app.get("/api/push_swap_test")
-async def push_swap_test(id: str, param_count: int, country: str):
+async def push_swap_test(
+    id: str, param_count: int, country: str, db: Session = Depends(get_db)
+):
     result = test_push_swap(id, param_count)
     print(f"id : {id} country : {country}")
-    
+
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
         return result
-    
+
     if not id in count_dict:
         count_dict[id] = {}
     if not param_count in count_dict[id]:
         count_dict[id][param_count] = {
-            'count' : 0,
-            'answers' : 0,
+            "count": 0,
+            "answers": 0,
         }
-    count_dict[id][param_count]['count'] += 1
-    count_dict[id][param_count]['answers'] += len(result['answers'])
+    count_dict[id][param_count]["count"] += 1
+    count_dict[id][param_count]["answers"] += len(result["answers"])
 
     print(count_dict)
 
     for id, id_dict in count_dict.items():
-        print('id : ', id)
+        print("id : ", id)
         for param, param_result in id_dict.items():
-            print('---- param : ', param)
-            print('---- count : ', param_result['count'])
-            print('---- answers : ', param_result['answers'])
-    
-    if count_dict[id][param_count]['count'] == 5:
-        avg = math.ceil(count_dict[id][param_count]['answers'] / 5)
-        add_record(id, country, param_count, avg)
+            print("---- param : ", param)
+            print("---- count : ", param_result["count"])
+            print("---- answers : ", param_result["answers"])
+
+    if count_dict[id][param_count]["count"] == 5:
+        avg = math.ceil(count_dict[id][param_count]["answers"] / 5)
+        record_data = {
+            "id": id,
+            "country": country,
+            "param_count": param_count,
+            "answer_count": avg,
+        }
+        record_instance = schemas.RecordCreate(**record_data)
+        db_record = crud.create_record(db, record_instance)
+        print(db_record)
     return result
 
 
@@ -331,3 +349,23 @@ async def push_swap_test(id: str, param_count: int, country: str):
 def get_cleanup_request(id: str):
     clean_up_repo(id)
     print("cleanup " + id + "'s repo")
+
+
+@app.get("/api/test")
+def test_write_indb(db: Session = Depends(get_db)):
+    record_data = {
+        "id": "yooh",
+        "country": "KR",
+        "param_count": 500,
+        "answer_count": 5444,
+    }
+    record_instance = schemas.RecordCreate(**record_data)
+    db_record = crud.create_record(db, record_instance)
+    print(db_record)
+    return True
+
+
+@app.get("/api/rank")
+def get_rank_list(page: int, param_count: int, db: Session = Depends(get_db)):
+    ranks = crud.get_records(db, skip=page, limit=20)
+    return ranks

@@ -7,6 +7,7 @@ import Footer from './Footer';
 import Description from './Description/Description';
 import TestPage from './TestPage/TestPage';
 import { RecoilRoot } from 'recoil';
+import RankPage from './RankPage/RankPage';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<>
@@ -14,9 +15,10 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 			<BrowserRouter>
 				<Header />
 				<Routes>
-					<Route path={'/'} element={<App />} />
-					<Route path={'/description'} element={<Description />} />
+					<Route path={'/description'} element={<App />} />
+					<Route path={'/'} element={<Description />} />
 					<Route path={'/tester'} element={<TestPage />} />
+					<Route path={'/rank'} element={<RankPage />} />
 				</Routes>
 				<Footer />
 			</BrowserRouter>

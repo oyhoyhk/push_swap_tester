@@ -168,9 +168,15 @@ const TestPage = () => {
 		}
 	}, []);
 
+	const clickTest = async () => {
+		const response = await axios(import.meta.env.VITE_SERVER_URL + '/api/test');
+		console.log(response.data);
+	};
+
 	return (
 		<Container ref={rootRef}>
 			<ButtonContainer>
+				<Button onClick={clickTest}>Test</Button>
 				<Button>Reset</Button>
 				<Button>Retry</Button>
 			</ButtonContainer>
