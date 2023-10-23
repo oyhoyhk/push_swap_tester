@@ -60,11 +60,8 @@ def test_invalid_params(id: str):
                 print(f"in invalid test, [{result.stdout}], [{result.stderr}]")
                 result_dict = {
                     "type": False,
+                    "stdout" : f"Wrong answer when input is {testcase}"
                 }
-                if result.returncode == 0:
-                    result_dict["stdout"] = result.stdout
-                else:
-                    result_dict["stdout"] = result.stderr
                 return result_dict
         return {
             "type": True,
@@ -104,10 +101,12 @@ def test_param_duplication(id: str):
                 stderr=subprocess.PIPE,
                 text=True,
             )
-            if result.stdout != "Error\n":
+            if result.stdout != "Error\n" and result.stderr != "Error\n":
+                print('result.stdout : ', result.stdout)
+                print('result.stderr : ', result.stderr)
                 return {
                     "type": False,
-                    "stdout": result.stdout,
+                    "stdout": f"Exception handling failed when test {testcase}",
                 }
         return {
             "type": True,

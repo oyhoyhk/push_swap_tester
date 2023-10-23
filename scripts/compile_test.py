@@ -121,8 +121,11 @@ def test_make_fclean(id: str):
             text=True,
         )
         for root, dirs, files in os.walk(os.getcwd()):
+            if '.dSYM' in root:
+                continue
             for file in files:
                 if file.endswith(".o") or file == "push_swap":
+                    print('pwd : ', dir, 'file : ',  file)
                     return {
                         "type": False,
                         "stdout": "make fclean test Failed",
