@@ -8,22 +8,27 @@ async function getData(page: number, paramCount: number) {
 }
 
 interface IRankInfo {
-  answer_count:number;
-  id:string;
-  param_count:number;
-  country:string;
+	unique_id: number;
+	answer_count: number;
+	id: string;
+	param_count: number;
+	country: string;
 }
+
+type Category = '500' | '100';
+
+type List = { [key in Category]: IRankInfo[] };
 
 const RankPage = () => {
 	const conRef = useRef<HTMLDivElement>(null);
-	const [category, setCategory] = useState<'500' | '100'>('500');
-	const [list, setList] = useState<{ 500: number[]; 100: number[] }>({ 500: [], 100: [] });
+	const [category, setCategory] = useState<Category>('500');
+	const [list, setList] = useState<List>({ '500': [], '100': [] });
 
 	useEffect(() => {
 		conRef.current?.classList.add('active');
-		getData(0, 500).then((res: => {
+		getData(0, 500).then((res: IRankInfo[]) => {
 			console.log('res : ', res);
-      setList([...res])
+			setList({ ...list, '500': [...res] });
 		});
 	}, []);
 
@@ -48,7 +53,16 @@ const RankPage = () => {
 					<div>ID</div>
 					<div>Commands Count</div>
 				</TableHead>
-				<TableBody></TableBody>
+				<TableBody>
+					{list[category].map((rank) => (
+						<div>
+							<div>{rank.unique_id}</div>
+							<Country country={rank.country} />
+							<div>{rank.id}</div>
+							<div>{rank.answer_count}</div>
+						</div>
+					))}
+				</TableBody>
 			</RanksContainer>
 		</Container>
 	);
@@ -68,6 +82,22 @@ const TableContents = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	font-weight: bold;
+`;
+
+const Country = styled.div<{ country: string }>`
+	width: 80%;
+	height: 80%;
+	background: red;
+	background: url(${({ country }) => `https://flagcdn.com/w40/${country.toLowerCase()}.png`});
+	background-size: 80% 80%;
+	background-repeat: no-repeat;
+	background-position: center center;
+`;
+
+const TableHead = styled(TableContents)`
+	margin-top: 25px;
+	width: 100%;
+	height: 40px;
 	& > div {
 		display: flex;
 		justify-content: center;
@@ -89,17 +119,37 @@ const TableContents = styled.div`
 	}
 `;
 
-const TableHead = styled(TableContents)`
-	margin-top: 25px;
-	width: 100%;
-	height: 40px;
-`;
-
 const TableBody = styled(TableContents)`
 	flex: 1;
-	overflow: scroll;
+	overflow: auto;
 	width: 100%;
-	background: red;
+	display: block;
+	& > div {
+		display: flex;
+		width: 100%;
+		height: 40px;
+		margin-top: 10px;
+		justify-content: space-between;
+		& > div {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+			border-bottom: 1px solid gray;
+		}
+		& > div:nth-of-type(1) {
+			width: 10%;
+		}
+		& > div:nth-of-type(2) {
+			width: 10%;
+		}
+		& > div:nth-of-type(3) {
+			width: 30%;
+		}
+		& > div:nth-of-type(4) {
+			width: 30%;
+		}
+	}
 `;
 
 const Container = styled.div`

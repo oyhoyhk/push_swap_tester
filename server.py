@@ -367,5 +367,5 @@ def test_write_indb(db: Session = Depends(get_db)):
 
 @app.get("/api/rank")
 def get_rank_list(page: int, param_count: int, db: Session = Depends(get_db)):
-    ranks = crud.get_records(db, skip=page, limit=20)
+    ranks = crud.get_records(db, skip=page, param_count=param_count, limit=20)
     return ranks

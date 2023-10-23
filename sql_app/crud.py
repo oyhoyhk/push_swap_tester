@@ -6,8 +6,8 @@ def get_country_records(db: Session, country: str):
     return db.query(models.Record).filter(models.Record.country == country).all()
 
 
-def get_records(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Record).offset(skip).limit(limit).all()
+def get_records(db: Session, skip: int = 0, param_count : int = 500, limit: int = 100):
+    return db.query(models.Record).filter(models.Record.param_count == param_count).order_by(models.Record.answer_count).offset(skip).limit(limit).all()
 
 
 def create_record(db: Session, record: schemas.RecordCreate):
