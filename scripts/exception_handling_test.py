@@ -2,7 +2,7 @@ import os
 import subprocess
 
 
-def test_no_param(id: str):
+async def test_no_param(id: str):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)
@@ -43,7 +43,7 @@ invalid_param_testcases = [
 ]
 
 
-def test_invalid_params(id: str):
+async def test_invalid_params(id: str):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)
@@ -60,7 +60,7 @@ def test_invalid_params(id: str):
                 print(f"in invalid test, [{result.stdout}], [{result.stderr}]")
                 result_dict = {
                     "type": False,
-                    "stdout" : f"Wrong answer when input is {testcase}"
+                    "stdout": f"Wrong answer when input is {testcase}"
                 }
                 return result_dict
         return {
@@ -88,7 +88,7 @@ duplicated_params_testcases = [
 ]
 
 
-def test_param_duplication(id: str):
+async def test_param_duplication(id: str):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)

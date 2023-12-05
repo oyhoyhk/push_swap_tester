@@ -9,7 +9,35 @@
           "name": "make Test",
           "tab": "make",
           "api": "/api/make_test?id=",
-          "next_api": "/api/push_swap_test?param_count=3&id=",
+          "next_api": "/api/make_re_link_test?id=",
+          "status": "pending"
+        },
+        {
+          "name": "make re-link Test",
+          "tab": "re-link",
+          "api": "/api/make_re_link_test?id=",
+          "next_api": "/api/make_re_test?id=",
+          "status": "pending"
+        },
+        {
+          "name": "make re Test",
+          "tab": "make re",
+          "api": "/api/make_re_test?id=",
+          "next_api": "/api/make_clean_test?id=",
+          "status": "pending"
+        },
+        {
+          "name": "make clean Test",
+          "tab": "clean",
+          "api": "/api/make_clean_test?id=",
+          "next_api": "/api/make_fclean_test?id=",
+          "status": "pending"
+        },
+        {
+          "name": "make fclean Test",
+          "tab": "fclean",
+          "api": "/api/make_fclean_test?id=",
+          "next_api": "/api/no_param_test?id=",
           "status": "pending"
         }
       ]

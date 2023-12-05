@@ -1,3 +1,16 @@
+from scripts.push_swap_test import test_push_swap
+from scripts.exception_handling_test import (
+    test_no_param,
+    test_invalid_params,
+    test_param_duplication,
+)
+from scripts.compile_test import (
+    test_make,
+    test_make_re_link,
+    test_make_re,
+    test_make_clean,
+    test_make_fclean,
+)
 from typing import Annotated
 from fastapi import FastAPI, Depends, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import RedirectResponse
@@ -5,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import git
 from pydantic import BaseModel
+import traceback
 import sys
 import math
 import os
@@ -36,22 +50,6 @@ def get_db():
     finally:
         db.close()
 
-
-from compile_test import (
-    test_make,
-    test_make_re_link,
-    test_make_re,
-    test_make_clean,
-    test_make_fclean,
-)
-
-from exception_handling_test import (
-    test_no_param,
-    test_invalid_params,
-    test_param_duplication,
-)
-
-from push_swap_test import test_push_swap
 
 count_dict = {}
 
@@ -224,7 +222,8 @@ async def clone_git_repository(request: Request):
 @app.get("/api/make_test")
 async def make_test(id: str):
     print("make test, id : ", id)
-    result = test_make(id)
+    result = await test_make(id)
+    print('in make_test, result : ', result)
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
@@ -233,7 +232,7 @@ async def make_test(id: str):
 
 @app.get("/api/make_re_link_test")
 async def make_test(id: str):
-    result = test_make_re_link(id)
+    result = await test_make_re_link(id)
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
@@ -242,7 +241,7 @@ async def make_test(id: str):
 
 @app.get("/api/make_re_test")
 async def make_re_test(id: str):
-    result = test_make_re(id)
+    result = await test_make_re(id)
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
@@ -251,7 +250,7 @@ async def make_re_test(id: str):
 
 @app.get("/api/make_clean_test")
 async def make_clean_test(id: str):
-    result = test_make_clean(id)
+    result = await test_make_clean(id)
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
@@ -260,7 +259,7 @@ async def make_clean_test(id: str):
 
 @app.get("/api/make_fclean_test")
 async def make_fclean_test(id: str):
-    result = test_make_fclean(id)
+    result = await test_make_fclean(id)
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
@@ -269,7 +268,7 @@ async def make_fclean_test(id: str):
 
 @app.get("/api/no_param_test")
 async def no_param_test(id: str):
-    result = test_no_param(id)
+    result = await test_no_param(id)
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
@@ -278,7 +277,7 @@ async def no_param_test(id: str):
 
 @app.get("/api/invalid_params_test")
 async def invalid_params_test(id: str):
-    result = test_invalid_params(id)
+    result = await test_invalid_params(id)
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
@@ -287,7 +286,7 @@ async def invalid_params_test(id: str):
 
 @app.get("/api/duplicated_params_test")
 async def duplicated_params_test(id: str):
-    result = test_param_duplication(id)
+    result = await test_param_duplication(id)
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
@@ -304,7 +303,7 @@ def add_record(id, country, param_count, answer_count):
 async def push_swap_test(
     id: str, param_count: int, country: str, db: Session = Depends(get_db)
 ):
-    result = test_push_swap(id, param_count)
+    result = await test_push_swap(id, param_count)
     print(f"id : {id} country : {country}")
 
     if not result["type"]:

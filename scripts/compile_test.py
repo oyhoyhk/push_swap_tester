@@ -2,7 +2,7 @@ import os
 import subprocess
 
 
-def test_make(id: str):
+async def test_make(id: str):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)
@@ -29,7 +29,7 @@ def test_make(id: str):
         os.chdir(original_directory)
 
 
-def test_make_re_link(id: str):
+async def test_make_re_link(id: str):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)
@@ -60,7 +60,7 @@ def test_make_re_link(id: str):
         os.chdir(original_directory)
 
 
-def test_make_re(id: str):
+async def test_make_re(id: str):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)
@@ -80,7 +80,7 @@ def test_make_re(id: str):
         os.chdir(original_directory)
 
 
-def test_make_clean(id: str):
+async def test_make_clean(id: str):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)
@@ -108,7 +108,7 @@ def test_make_clean(id: str):
         os.chdir(original_directory)
 
 
-def test_make_fclean(id: str):
+async def test_make_fclean(id: str):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)

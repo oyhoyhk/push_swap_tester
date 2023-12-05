@@ -1,7 +1,7 @@
 import os
 import random
 import subprocess
-from util_scripts import cleanup_function
+from scripts.util_scripts import cleanup_function
 
 
 def create_test_case(param_count: int, min_val=1):
@@ -83,7 +83,7 @@ max_count = {
 }
 
 
-def test_push_swap(id: str, param_count: int):
+async def test_push_swap(id: str, param_count: int):
     original_directory = os.getcwd()
     try:
         dir = os.path.join("repo", id)
