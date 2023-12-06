@@ -29,7 +29,7 @@ const RankPage = () => {
 		getData(0, Number(category)).then((res: IRankInfo[]) => {
 			setList({ ...list, [category]: [...res] });
 		});
-	}, [category]);
+	}, [category, list]);
 
 	useEffect(() => {
 		localStorage.removeItem('path');
