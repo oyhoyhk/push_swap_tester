@@ -30,6 +30,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.responses import FileResponse, RedirectResponse
 from datetime import datetime, timedelta
 import shutil
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sql_app import crud, models, schemas
 from sql_app.database import SessionLocal, engine
@@ -367,6 +368,8 @@ def test_write_indb(db: Session = Depends(get_db)):
 @app.get("/api/rank")
 def get_rank_list(page: int, param_count: int, db: Session = Depends(get_db)):
     ranks = crud.get_records(db, skip=page, param_count=param_count, limit=500)
+    # return ranks
+    # Group by 'id' and get the minimum 'answer_count' for each group
     return ranks
 
 
