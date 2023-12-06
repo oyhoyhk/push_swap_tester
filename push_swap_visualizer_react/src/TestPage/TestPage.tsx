@@ -168,11 +168,6 @@ const TestPage = () => {
 		}
 	}, []);
 
-	const clickTest = async () => {
-		const response = await axios(import.meta.env.VITE_SERVER_URL + '/api/test');
-		console.log(response.data);
-	};
-
 	useEffect(() => {
 		localStorage.removeItem('path');
 		const beforehunloadHandler = () => {
@@ -183,16 +178,11 @@ const TestPage = () => {
 
 	return (
 		<Container ref={rootRef}>
-			<ButtonContainer>
-				<Button onClick={clickTest}>Test</Button>
-				<Button>Reset</Button>
-				<Button>Retry</Button>
-			</ButtonContainer>
 			{status['id'].check && (
 				<Fieldset
 					name="id"
 					status={status}
-					legend="Github ID"
+					legend="Intra ID"
 					placeholder="Input your github ID"
 					onBlur={onBlurGithubID}
 					onKeyUp={onKeyUpGithubID}
@@ -215,31 +205,6 @@ const TestPage = () => {
 		</Container>
 	);
 };
-
-const Button = styled.button`
-	margin-left: 15px;
-	outline: none;
-	padding: 10px 10px;
-	border-radius: 5px;
-	border: 2px solid gray;
-	background: none;
-	color: gray;
-	cursor: pointer;
-	transition: 0.5s;
-	font-size: 1.1rem;
-	&.active {
-		border: 2px solid white;
-		color: white;
-	}
-`;
-
-const ButtonContainer = styled.div`
-	width: 570px;
-	height: 40px;
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-`;
 
 const Container = styled.div`
 	display: flex;
