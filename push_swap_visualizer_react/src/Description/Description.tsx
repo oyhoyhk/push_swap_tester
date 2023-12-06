@@ -75,9 +75,9 @@ function drawArrow(ctx: CanvasRenderingContext2D) {
 }
 
 const solutions = [
-	{ name: 'Greedy Sort', file: 'greedy_sort.mov' },
-	{ name: 'Radix Sort', file: 'radix_sort.mov' },
-	{ name: 'Merge Sort', file: 'merge_sort.mov' },
+	{ name: 'Greedy Sort', file: 'static/greedy_sort.mov' },
+	{ name: 'Radix Sort', file: 'static/radix_sort.mov' },
+	{ name: 'Merge Sort', file: 'static/merge_sort.mov' },
 ];
 
 const Description = () => {
