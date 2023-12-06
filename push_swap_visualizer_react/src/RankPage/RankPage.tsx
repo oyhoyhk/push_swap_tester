@@ -26,11 +26,10 @@ const RankPage = () => {
 
 	useEffect(() => {
 		conRef.current?.classList.add('active');
-		getData(0, 500).then((res: IRankInfo[]) => {
-			console.log('res : ', res);
-			setList({ ...list, '500': [...res] });
+		getData(0, Number(category)).then((res: IRankInfo[]) => {
+			setList({ ...list, [category]: [...res] });
 		});
-	}, []);
+	}, [category]);
 
 	useEffect(() => {
 		localStorage.removeItem('path');

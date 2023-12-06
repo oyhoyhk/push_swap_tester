@@ -52,7 +52,6 @@ const TestPage = () => {
 				id: e.target.value,
 			});
 			const check = response.data;
-			console.log(check);
 			if (check == true) {
 				setStatus({
 					id: {
@@ -153,7 +152,6 @@ const TestPage = () => {
 		async function getClientIP() {
 			try {
 				const result = await axios.get('https://geo.ipify.org/api/v2/country?apiKey=at_dkrcX9VN41JyLEodDiSMDLKRim0JA');
-				console.log(result);
 				const country = result.data.location.country;
 				localStorage.setItem('country', country);
 				setCountryInfo(country);

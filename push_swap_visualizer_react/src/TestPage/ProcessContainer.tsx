@@ -120,11 +120,6 @@ const ProcessContainer = ({ id }: { id: string }) => {
 		const [api, nextAPI] = result;
 		executedTestList.current.push(curTestName);
 		const nextTest = getTestName(executedTestList.current, nextAPI, tasks);
-		console.log(
-			`in requestTest, executedTestList.current : ${
-				executedTestList.current[executedTestList.current.length - 1]
-			} nextTest : ${nextTest}`
-		);
 		setTasks(
 			tasks.map(task => ({
 				...task,
@@ -139,7 +134,6 @@ const ProcessContainer = ({ id }: { id: string }) => {
 		);
 		setMessage({ type: 'running', msg: `Running ${curTestName}` });
 		const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}${api}${id}&country=${country}`);
-		console.log(curTestName, api, response.data);
 		if (response.data.type) {
 			setTasks(
 				tasks.map(task => ({
@@ -161,7 +155,6 @@ const ProcessContainer = ({ id }: { id: string }) => {
 							tempTask['state'] = 'success';
 							temp.set(test.name, tempTask);
 							setList(temp);
-							console.log(temp);
 							return {
 								...test,
 								status: 'success',
@@ -202,7 +195,6 @@ const ProcessContainer = ({ id }: { id: string }) => {
 							tempTask['state'] = 'fail';
 							temp.set(test.name, tempTask);
 							setList(temp);
-							console.log(temp);
 							return {
 								...test,
 								status: 'fail',

@@ -7,8 +7,8 @@ const list: string[] = [];
 const TEST_WIDTH = 135;
 const TEST_MARGIN = 10;
 
-taskList.tasks.forEach((target) => {
-	target.list.forEach((task) => {
+taskList.tasks.forEach(target => {
+	target.list.forEach(task => {
 		list.push(task.name);
 	});
 });
@@ -40,9 +40,6 @@ const Response = ({
 		const onWheel = (e: WheelEvent) => {
 			e.preventDefault();
 			const target = e.target as HTMLDivElement;
-			for (const node of target.children) {
-				console.log(node.getBoundingClientRect().width);
-			}
 			if (e.deltaY > 0) {
 				if (cur === 0) return;
 				setCur(cur - 1);
@@ -51,7 +48,6 @@ const Response = ({
 				if (cur === list.size - 1) return;
 				setCur(cur + 1);
 				const totalWidth = (TEST_WIDTH + TEST_MARGIN) * list.size - TEST_MARGIN;
-				console.log(totalWidth);
 				setPos(Math.min(pos + TEST_WIDTH + TEST_MARGIN, totalWidth - 570));
 			}
 		};
@@ -66,7 +62,6 @@ const Response = ({
 		const target = list.get(selected)?.[type]?.join(type === 'params' ? ' ' : '\n') || '';
 		try {
 			await navigator.clipboard.writeText(target);
-			console.log('copy success', target);
 		} catch (e) {
 			console.error('copy failed', e);
 		}
