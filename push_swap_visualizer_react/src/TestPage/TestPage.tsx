@@ -173,6 +173,14 @@ const TestPage = () => {
 		console.log(response.data);
 	};
 
+	useEffect(() => {
+		localStorage.removeItem('path');
+		const beforehunloadHandler = () => {
+			localStorage.setItem('path', location.pathname);
+		};
+		window.addEventListener('beforeunload', beforehunloadHandler);
+	}, []);
+
 	return (
 		<Container ref={rootRef}>
 			<ButtonContainer>

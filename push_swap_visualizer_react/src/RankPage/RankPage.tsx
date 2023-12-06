@@ -32,6 +32,14 @@ const RankPage = () => {
 		});
 	}, []);
 
+	useEffect(() => {
+		localStorage.removeItem('path');
+		const beforehunloadHandler = () => {
+			localStorage.setItem('path', location.pathname);
+		};
+		window.addEventListener('beforeunload', beforehunloadHandler);
+	}, []);
+
 	// https://flagcdn.com/:size/:country_code.png
 	return (
 		<Container ref={conRef}>

@@ -223,7 +223,7 @@ async def clone_git_repository(request: Request):
 async def make_test(id: str):
     print("make test, id : ", id)
     result = await test_make(id)
-    print('in make_test, result : ', result)
+    print("in make_test, result : ", result)
     if not result["type"]:
         directory = os.path.join(os.getcwd(), "repo", id)
         update_schedule(id, directory)
@@ -368,3 +368,11 @@ def test_write_indb(db: Session = Depends(get_db)):
 def get_rank_list(page: int, param_count: int, db: Session = Depends(get_db)):
     ranks = crud.get_records(db, skip=page, param_count=param_count, limit=20)
     return ranks
+
+
+# Catch-all route for non-existent paths
+@app.route("/{path:path}")
+async def catch_all(path: str):
+    # Redirect to the root path
+    print("wrong path : ", path)
+    return RedirectResponse(url="/", status_code=307)

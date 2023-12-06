@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import data from './CommandsInfo.json';
 import cmdMapJson from './CommandMap.json';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const cmdMap = JSON.parse(cmdMapJson);
 
@@ -32,6 +33,7 @@ function drawStack(ctx: CanvasRenderingContext2D, arr: IStackInfo[], cur: string
 	ctx.clearRect(0, 0, 580, 350);
 	ctx.font = '30px Arial';
 	ctx.fillStyle = 'white';
+
 	const textWidth = ctx.measureText(cur).width;
 	const canvasWidth = ctx.canvas.width;
 	const x = (canvasWidth - textWidth) / 2;
@@ -86,6 +88,7 @@ const Description = () => {
 	const [below, setBelow] = useState(false);
 	const [solIndex, setSolIndex] = useState(0);
 	const [curSolution, setCurSolution] = useState('Greedy Sort');
+	const navigate = useNavigate();
 
 	const onClick = (val: string, index: number) => {
 		setCmd(val);
@@ -105,6 +108,14 @@ const Description = () => {
 
 		drawStack(ctx, cmdMap[cmd].info, data[idx].title);
 	}, [upper, cmd, below]);
+
+	useEffect(() => {
+		const path = localStorage.getItem('path');
+		if (path) {
+			navigate(path);
+			localStorage.removeItem('path');
+		}
+	}, []);
 
 	return (
 		<DescriptionContainer>

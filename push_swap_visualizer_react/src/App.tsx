@@ -7,6 +7,7 @@ import Visualizer from './components/Visualizer';
 import { createRandomNumber, doOperation, doReverseOperation } from './funcs';
 import Introduction from './components/Introduction';
 import Deque from 'double-ended-queue';
+import { useLocation } from 'react-router-dom';
 
 const CONTAINER_WIDTH = 900;
 const CONTAINER_HEIGHT = 750;
@@ -14,6 +15,7 @@ const STACK_WIDTH = 350;
 const COUNT = 500;
 
 const App = () => {
+	const location = useLocation();
 	const [count, setCount] = useState(COUNT);
 	const [origin, setOrigin] = useState<Deque<number>>(new Deque([]));
 	const [stackA, setStackA] = useState<Deque<number>>(new Deque([]));
@@ -117,6 +119,15 @@ const App = () => {
 			document.body.removeEventListener('keypress', handleKeyPress);
 		};
 	});
+
+	useEffect(() => {
+		localStorage.removeItem('path');
+		const beforehunloadHandler = () => {
+			localStorage.setItem('path', location.pathname);
+		};
+		window.addEventListener('beforeunload', beforehunloadHandler);
+	}, []);
+
 	return (
 		<Container>
 			{(stackA.length + stackB.length === 0 || commands.length === 0) && <Introduction />}
