@@ -39,7 +39,6 @@ const Response = ({
 	useEffect(() => {
 		const onWheel = (e: WheelEvent) => {
 			e.preventDefault();
-			const target = e.target as HTMLDivElement;
 			if (e.deltaY > 0) {
 				if (cur === 0) return;
 				setCur(cur - 1);
