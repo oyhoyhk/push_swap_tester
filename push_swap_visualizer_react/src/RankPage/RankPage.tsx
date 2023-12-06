@@ -54,9 +54,9 @@ const RankPage = () => {
 					<div>Commands Count</div>
 				</TableHead>
 				<TableBody>
-					{list[category].map((rank) => (
+					{list[category].map((rank, idx) => (
 						<div>
-							<div>{rank.unique_id}</div>
+							<div>{idx + 1}</div>
 							<Country country={rank.country} />
 							<div>{rank.id}</div>
 							<div>{rank.answer_count}</div>
@@ -89,7 +89,7 @@ const Country = styled.div<{ country: string }>`
 	height: 80%;
 	background: red;
 	background: url(${({ country }) => `https://flagcdn.com/w40/${country.toLowerCase()}.png`});
-	background-size: 80% 80%;
+	background-size: 70% 70%;
 	background-repeat: no-repeat;
 	background-position: center center;
 `;
@@ -149,6 +149,15 @@ const TableBody = styled(TableContents)`
 		& > div:nth-of-type(4) {
 			width: 30%;
 		}
+	}
+
+	&::-webkit-scrollbar {
+		background: transparent;
+		width: 5px;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: 1rem;
+		background: linear-gradient(45deg, #707070, #949494);
 	}
 `;
 

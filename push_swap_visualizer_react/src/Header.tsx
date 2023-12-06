@@ -8,10 +8,10 @@ const Header = () => {
 		<HeaderContainer>
 			<Title>Push Swap Visualizer</Title>
 			<div>
-				<StyledLink className={location.pathname === '/' ? 'active' : ''} to={'/description'}>
+				<StyledLink className={location.pathname === '/' ? 'active' : ''} to={'/'}>
 					Introduce
 				</StyledLink>
-				<StyledLink className={location.pathname === '/description' ? 'active' : ''} to={'/'}>
+				<StyledLink className={location.pathname === '/description' ? 'active' : ''} to={'/description'}>
 					Visualizer
 				</StyledLink>
 				<StyledLink className={location.pathname === '/tester' ? 'active' : ''} to={'/tester'}>
