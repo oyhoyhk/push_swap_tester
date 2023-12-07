@@ -19,7 +19,6 @@ def get_records(db: Session, skip: int = 0, param_count: int = 500, limit: int =
         .group_by(models.Record.id)
         .subquery()
     )
-
     # Join the subquery with the original table to get the full records
     records = (
         db.query(models.Record)
@@ -30,6 +29,7 @@ def get_records(db: Session, skip: int = 0, param_count: int = 500, limit: int =
                 models.Record.answer_count == subquery.c.min_answer_count,
             ),
         )
+        .group_by(models.Record.id)
         .order_by(models.Record.answer_count)
         .offset(skip)
         .limit(limit)
