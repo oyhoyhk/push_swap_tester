@@ -181,7 +181,7 @@ const TestPage = () => {
 					name="id"
 					status={status}
 					legend="Intra ID"
-					placeholder="Input your github ID"
+					placeholder="Input your intra ID"
 					onBlur={onBlurGithubID}
 					onKeyUp={onKeyUpGithubID}
 					setStatus={setStatus}
